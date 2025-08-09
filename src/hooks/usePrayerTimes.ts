@@ -17,6 +17,7 @@ interface UsePrayerTimesReturn {
   islamicDate: string;
   nextPrayer: string;
   timeToNext: string;
+  jamaatCountdown: string;
   prayerTimes: PrayerTime[];
   jumahTime: { azanTime: string; jamaatTime: string };
   khutbahTime: string;
@@ -101,6 +102,7 @@ export const usePrayerTimes = (): UsePrayerTimesReturn => {
     islamicDate: '15 Rajab 1446',
     nextPrayer: 'Asar',
     timeToNext: '2h 30m',
+    jamaatCountdown: '25:30',
     prayerTimes,
     jumahTime,
     khutbahTime,

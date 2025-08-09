@@ -53,7 +53,21 @@ All colors MUST be HSL.
     --shadow-card: 0 4px 16px hsl(var(--primary) / 0.08);
     --shadow-glow: 0 0 24px hsl(var(--islamic-gold) / 0.3);
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Material 3 Expressive Design Tokens */
+    --material-elevation-1: 0 1px 3px hsl(var(--primary) / 0.12);
+    --material-elevation-2: 0 4px 8px hsl(var(--primary) / 0.16);
+    --material-elevation-3: 0 8px 16px hsl(var(--primary) / 0.20);
+    --material-surface-variant: 140 20% 92%;
+    --material-outline: 140 15% 75%;
+    --material-outline-variant: 140 10% 85%;
+    
+    /* Enhanced Prayer App Colors */
+    --prayer-surface: 140 25% 96%;
+    --prayer-container: 160 20% 94%;
+    --countdown-bg: 45 100% 96%;
+    --countdown-text: 45 85% 25%;
 
     --sidebar-background: 0 0% 98%;
 

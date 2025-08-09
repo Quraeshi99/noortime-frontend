@@ -1,6 +1,6 @@
-import { PrayerHeader } from "@/components/PrayerHeader";
-import { PrayerTimesGrid } from "@/components/PrayerTimesGrid";
-import { AdditionalTimes } from "@/components/AdditionalTimes";
+import { TopHeader } from "@/components/TopHeader";
+import { MainPrayerTable } from "@/components/MainPrayerTable";
+import { BottomSection } from "@/components/BottomSection";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
@@ -11,6 +11,7 @@ const Index = () => {
     islamicDate,
     nextPrayer,
     timeToNext,
+    jamaatCountdown,
     prayerTimes,
     jumahTime,
     khutbahTime,
@@ -21,28 +22,29 @@ const Index = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header Section */}
-        <PrayerHeader
+    <div className="min-h-screen bg-gradient-to-br from-background via-prayer-surface to-secondary/30 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Top Header Section */}
+        <TopHeader
           currentTime={currentTime}
           currentDate={currentDate}
           islamicDate={islamicDate}
           nextPrayer={nextPrayer}
           timeToNext={timeToNext}
+          jamaatCountdown={jamaatCountdown}
           isDarkMode={isDarkMode}
           onToggleDarkMode={toggleDarkMode}
         />
 
-        {/* Prayer Times Grid */}
-        <PrayerTimesGrid
+        {/* Main Prayer Times Table */}
+        <MainPrayerTable
           prayerTimes={prayerTimes}
           jumahTime={jumahTime}
           khutbahTime={khutbahTime}
         />
 
-        {/* Additional Information */}
-        <AdditionalTimes
+        {/* Bottom Section with Dates and Other Times */}
+        <BottomSection
           englishDate={englishDate}
           islamicDate={islamicDate}
           otherTimes={otherTimes}
