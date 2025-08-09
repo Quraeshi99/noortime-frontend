@@ -52,6 +52,15 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				prayer: {
+					active: 'hsl(var(--prayer-active))',
+					next: 'hsl(var(--prayer-next))',
+					completed: 'hsl(var(--prayer-completed))'
+				},
+				islamic: {
+					gold: 'hsl(var(--islamic-gold))',
+					crescent: 'hsl(var(--crescent))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
