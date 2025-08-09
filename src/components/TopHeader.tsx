@@ -25,81 +25,62 @@ export const TopHeader = ({
 }: TopHeaderProps) => {
   return (
     <div className="space-y-6">
-      {/* Logo Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      {/* Logo Header - Compact Mobile Version */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
           <div className="relative">
             <img 
               src="/lovable-uploads/39329f85-045b-48c6-88b3-a2d925d41463.png" 
-              alt="Noor Time Logo" 
-              className="w-16 h-16 rounded-2xl shadow-lg border-2 border-primary/20"
+              alt="Noor Time" 
+              className="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-md"
             />
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-islamic-gold rounded-full border-2 border-background"></div>
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Noor Time
             </h1>
-            <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              Prayer Times - Karachi, Pakistan
-            </p>
           </div>
         </div>
         <Button
           variant="outline"
           size="icon"
           onClick={onToggleDarkMode}
-          className="rounded-2xl border-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-md"
+          className="h-10 w-10 rounded-xl border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
         >
-          {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
       </div>
 
-      {/* Main Info Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Main Info Cards Row - Mobile Optimized */}
+      <div className="grid grid-cols-3 gap-2 md:gap-4">
         {/* Salah Info Box */}
-        <Card className="p-6 bg-gradient-to-br from-card via-prayer-surface to-secondary border-2 border-primary/10 shadow-[var(--material-elevation-2)] rounded-2xl">
-          <div className="text-center space-y-2">
-            <h3 className="text-lg font-bold text-primary">Current Salah</h3>
-            <div className="space-y-1">
-              <div className="text-2xl font-bold text-foreground">{nextPrayer}</div>
-              <div className="text-sm text-muted-foreground">Next Prayer</div>
-              <div className="px-3 py-1 bg-primary/10 rounded-full">
-                <span className="text-sm font-medium text-primary">In Progress</span>
-              </div>
-            </div>
+        <Card className="p-3 md:p-4 bg-gradient-to-br from-card to-secondary border border-primary/20 rounded-xl">
+          <div className="text-center space-y-1">
+            <h3 className="text-xs md:text-sm font-bold text-primary">Current</h3>
+            <div className="text-sm md:text-lg font-bold text-foreground">{nextPrayer}</div>
+            <div className="text-xs text-muted-foreground hidden md:block">Next Prayer</div>
           </div>
         </Card>
 
         {/* Clock */}
-        <Card className="p-6 bg-gradient-to-br from-primary/5 via-accent/5 to-islamic-gold/5 border-2 border-accent/20 shadow-[var(--material-elevation-3)] rounded-2xl">
-          <div className="text-center space-y-3">
-            <div className="relative mx-auto w-16 h-16 border-4 border-primary/20 rounded-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-              <Clock className="h-8 w-8 text-primary" />
+        <Card className="p-3 md:p-4 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-xl">
+          <div className="text-center space-y-1">
+            <Clock className="h-4 w-4 md:h-6 md:w-6 text-primary mx-auto" />
+            <div className="text-sm md:text-xl font-bold font-mono text-primary">
+              {currentTime}
             </div>
-            <div>
-              <div className="text-3xl font-bold font-mono bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                {currentTime}
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">{currentDate}</div>
-            </div>
+            <div className="text-xs text-muted-foreground hidden md:block">{currentDate}</div>
           </div>
         </Card>
 
-        {/* Jamaat Info with Countdown */}
-        <Card className="p-6 bg-gradient-to-br from-countdown-bg via-islamic-gold/10 to-islamic-gold/5 border-2 border-islamic-gold/30 shadow-[var(--material-elevation-2)] rounded-2xl">
-          <div className="text-center space-y-3">
-            <h3 className="text-lg font-bold text-countdown-text">Next Jamaat</h3>
-            <div className="space-y-2">
-              <div className="text-xl font-bold text-islamic-crescent">{nextPrayer}</div>
-              <div className="bg-islamic-gold/20 rounded-xl p-3 border border-islamic-gold/30">
-                <div className="text-sm text-countdown-text mb-1">Time Remaining</div>
-                <div className="text-2xl font-mono font-bold text-islamic-crescent">
-                  {jamaatCountdown}
-                </div>
-              </div>
+        {/* Jamaat Countdown */}
+        <Card className="p-3 md:p-4 bg-gradient-to-br from-islamic-gold/20 to-islamic-crescent/20 border border-islamic-gold/40 rounded-xl">
+          <div className="text-center space-y-1">
+            <h3 className="text-xs md:text-sm font-bold text-islamic-crescent">Jamaat</h3>
+            <div className="text-sm md:text-lg font-bold font-mono text-islamic-crescent">
+              {jamaatCountdown}
             </div>
+            <div className="text-xs text-muted-foreground hidden md:block">Remaining</div>
           </div>
         </Card>
       </div>

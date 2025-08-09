@@ -15,67 +15,52 @@ interface BottomSectionProps {
 
 export const BottomSection = ({ englishDate, islamicDate, otherTimes }: BottomSectionProps) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {/* Left Side - Date Information */}
-      <div className="space-y-6">
+      <div className="space-y-3">
         {/* English Date Card */}
-        <Card className="p-6 bg-gradient-to-br from-card via-secondary/50 to-accent/20 border-2 border-accent/30 shadow-[var(--material-elevation-2)] rounded-3xl">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Calendar className="w-6 h-6 text-accent" />
-              <h3 className="text-xl font-bold text-accent">English Date</h3>
+        <Card className="p-4 bg-gradient-to-br from-card to-secondary border border-accent/30 rounded-2xl">
+          <div className="text-center space-y-2">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Calendar className="w-4 h-4 text-accent" />
+              <h3 className="text-sm md:text-base font-bold text-accent">English Date</h3>
             </div>
-            <div className="space-y-2">
-              <div className="text-3xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
-                {englishDate}
-              </div>
-              <div className="px-4 py-2 bg-accent/10 rounded-xl border border-accent/20">
-                <span className="text-sm font-medium text-accent">Gregorian Calendar</span>
-              </div>
-            </div>
+            <div className="text-lg md:text-xl font-bold text-primary">{englishDate}</div>
+            <div className="text-xs text-muted-foreground">Gregorian Calendar</div>
           </div>
         </Card>
 
         {/* Islamic Date Card */}
-        <Card className="p-6 bg-gradient-to-br from-islamic-gold/15 via-islamic-crescent/10 to-countdown-bg border-2 border-islamic-gold/40 shadow-[var(--material-elevation-2)] rounded-3xl">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <MoonIcon className="w-6 h-6 text-islamic-crescent" />
-              <h3 className="text-xl font-bold text-islamic-crescent">Islamic Date</h3>
+        <Card className="p-4 bg-gradient-to-br from-islamic-gold/15 to-islamic-crescent/10 border border-islamic-gold/40 rounded-2xl">
+          <div className="text-center space-y-2">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <MoonIcon className="w-4 h-4 text-islamic-crescent" />
+              <h3 className="text-sm md:text-base font-bold text-islamic-crescent">Islamic Date</h3>
             </div>
-            <div className="space-y-2">
-              <div className="text-3xl font-bold text-islamic-crescent">
-                {islamicDate}
-              </div>
-              <div className="px-4 py-2 bg-islamic-gold/20 rounded-xl border border-islamic-gold/30">
-                <span className="text-sm font-medium text-countdown-text">Hijri Calendar - 1446</span>
-              </div>
-            </div>
+            <div className="text-lg md:text-xl font-bold text-islamic-crescent">{islamicDate}</div>
+            <div className="text-xs text-muted-foreground">Hijri Calendar - 1446</div>
           </div>
         </Card>
       </div>
 
-      {/* Right Side - Other Times */}
-      <Card className="p-6 bg-gradient-to-br from-primary/5 via-accent/5 to-prayer-surface border-2 border-primary/20 shadow-[var(--material-elevation-2)] rounded-3xl">
-        <div className="space-y-6">
+      {/* Right Side - Other Times - Compact */}
+      <Card className="p-4 bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 rounded-2xl">
+        <div className="space-y-3">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <SunIcon className="w-6 h-6 text-primary" />
-              <h3 className="text-xl font-bold text-primary">Other Important Times</h3>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <SunIcon className="w-4 h-4 text-primary" />
+              <h3 className="text-sm md:text-base font-bold text-primary">Other Times</h3>
             </div>
-            <div className="w-20 h-1 bg-gradient-to-r from-primary to-accent rounded-full mx-auto"></div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-1">
             {otherTimes.map((time, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center p-4 rounded-2xl bg-gradient-to-r from-background/80 to-muted/30 hover:from-primary/5 hover:to-accent/5 border border-primary/10 hover:border-primary/30 transition-all duration-300 shadow-[var(--material-elevation-1)] hover:shadow-[var(--material-elevation-2)]"
+                className="flex justify-between items-center p-2 rounded-lg bg-background/50 hover:bg-muted/30 transition-colors duration-200"
               >
-                <div className="font-semibold text-foreground">{time.name}</div>
-                <div className="font-mono text-xl font-bold text-primary bg-primary/10 px-3 py-1 rounded-xl">
-                  {time.time}
-                </div>
+                <div className="text-xs md:text-sm font-medium text-foreground">{time.name}</div>
+                <div className="text-xs md:text-sm font-mono font-bold text-primary">{time.time}</div>
               </div>
             ))}
           </div>

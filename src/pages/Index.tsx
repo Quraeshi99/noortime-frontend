@@ -22,8 +22,8 @@ const Index = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-prayer-surface to-secondary/30 p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-2 md:p-4">
+      <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
         {/* Top Header Section */}
         <TopHeader
           currentTime={currentTime}
