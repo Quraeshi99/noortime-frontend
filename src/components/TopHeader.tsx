@@ -1,4 +1,4 @@
-import { Clock, Moon, Sun, MapPin } from "lucide-react";
+import { Clock, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -9,8 +9,7 @@ interface TopHeaderProps {
   nextPrayer: string;
   timeToNext: string;
   jamaatCountdown: string;
-  isDarkMode: boolean;
-  onToggleDarkMode: () => void;
+  onOpenSettings: () => void;
 }
 
 export const TopHeader = ({
@@ -20,8 +19,7 @@ export const TopHeader = ({
   nextPrayer,
   timeToNext,
   jamaatCountdown,
-  isDarkMode,
-  onToggleDarkMode,
+  onOpenSettings,
 }: TopHeaderProps) => {
   return (
     <div className="space-y-6">
@@ -44,10 +42,10 @@ export const TopHeader = ({
         <Button
           variant="outline"
           size="icon"
-          onClick={onToggleDarkMode}
+          onClick={onOpenSettings}
           className="h-10 w-10 rounded-xl border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
         >
-          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <Settings className="h-4 w-4" />
         </Button>
       </div>
 
