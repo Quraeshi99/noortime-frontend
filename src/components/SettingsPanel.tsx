@@ -2,14 +2,15 @@ import { useState } from "react";
 import { 
   User, 
   Clock, 
-  Palette, 
   LogOut, 
   Moon, 
   Sun, 
   Bell, 
   Volume2,
   MapPin,
-  X
+  X,
+  Edit3,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -17,6 +18,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/useAuth";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { SignupForm } from "@/components/auth/SignupForm";
+import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
+import { UserProfileForm } from "@/components/profile/UserProfileForm";
+import { ChangePasswordForm } from "@/components/profile/ChangePasswordForm";
+import { useToast } from "@/components/ui/use-toast";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -24,6 +32,8 @@ interface SettingsPanelProps {
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
 }
+
+type ViewType = 'main' | 'login' | 'signup' | 'forgot-password' | 'user-profile' | 'change-password';
 
 export const SettingsPanel = ({
   isOpen,
@@ -33,6 +43,31 @@ export const SettingsPanel = ({
 }: SettingsPanelProps) => {
   const [notifications, setNotifications] = useState(true);
   const [sound, setSound] = useState(true);
+  const [currentView, setCurrentView] = useState<ViewType>('main');
+  
+  const { user, signOut, loading } = useAuth();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Logout Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+      });
+      onClose();
+    }
+  };
+
+  const resetToMain = () => {
+    setCurrentView('main');
+  };
 
   if (!isOpen) return null;
 
@@ -63,133 +98,201 @@ export const SettingsPanel = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          
-          {/* User Profile Section */}
-          <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src="/placeholder-avatar.jpg" />
-                <AvatarFallback className="bg-primary text-primary-foreground text-lg font-semibold">
-                  U
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="text-xl font-semibold text-foreground">User Name</h3>
-                <p className="text-muted-foreground">user@example.com</p>
-                <Button variant="outline" size="sm" className="mt-2">
-                  <User className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
-              </div>
-            </div>
-          </Card>
-
-          <Separator />
-
-          {/* Prayer Time Settings */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              Prayer Time Settings
-            </h3>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="notifications" className="font-medium">Prayer Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Get notified before prayer times</p>
-                </div>
-                <Switch
-                  id="notifications"
-                  checked={notifications}
-                  onCheckedChange={setNotifications}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="sound" className="font-medium">Azan Sound</Label>
-                  <p className="text-sm text-muted-foreground">Play azan audio</p>
-                </div>
-                <Switch
-                  id="sound"
-                  checked={sound}
-                  onCheckedChange={setSound}
-                />
-              </div>
-
-              <Button variant="outline" className="w-full">
-                <MapPin className="h-4 w-4 mr-2" />
-                Change Location
-              </Button>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Theme & Display Settings */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Palette className="h-5 w-5 text-primary" />
-              Theme & Display
-            </h3>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="darkmode" className="font-medium">Dark Mode</Label>
-                  <p className="text-sm text-muted-foreground">Switch between light and dark theme</p>
-                </div>
-                <Switch
-                  id="darkmode"
-                  checked={isDarkMode}
-                  onCheckedChange={onToggleDarkMode}
-                />
-              </div>
-
-              <Card className="p-4 bg-gradient-to-r from-islamic-gold/20 to-islamic-crescent/20 border border-islamic-gold/30">
-                <div className="flex items-center gap-3">
-                  {isDarkMode ? <Moon className="h-5 w-5 text-islamic-crescent" /> : <Sun className="h-5 w-5 text-islamic-gold" />}
-                  <div>
-                    <p className="font-medium">{isDarkMode ? 'Dark' : 'Light'} Theme Active</p>
-                    <p className="text-sm text-muted-foreground">Perfect for {isDarkMode ? 'night' : 'day'} prayers</p>
+        <div className="flex-1 overflow-y-auto p-6">
+          {currentView === 'main' && (
+            <div className="space-y-6">
+              {/* User Profile Section */}
+              {user ? (
+                <Card className="p-4 bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src="/placeholder-avatar.jpg" />
+                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                        {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-foreground truncate">
+                        {user.user_metadata?.full_name || 'User'}
+                      </h3>
+                      <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setCurrentView('user-profile')}
+                    >
+                      <Edit3 className="h-4 w-4" />
+                    </Button>
                   </div>
+                </Card>
+              ) : (
+                <Card className="p-6 text-center">
+                  <div className="space-y-4">
+                    <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                      <User className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Welcome!</h3>
+                      <p className="text-sm text-muted-foreground">Sign in to access your account</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Button 
+                        className="w-full"
+                        onClick={() => setCurrentView('login')}
+                      >
+                        Sign In
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => setCurrentView('signup')}
+                      >
+                        Create Account
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              )}
+
+              {user && (
+                <>
+                  <Separator />
+
+                  {/* Prayer Time Settings */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-primary" />
+                      Prayer Time Settings
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="notifications" className="font-medium">Prayer Notifications</Label>
+                          <p className="text-sm text-muted-foreground">Get notified before prayer times</p>
+                        </div>
+                        <Switch
+                          id="notifications"
+                          checked={notifications}
+                          onCheckedChange={setNotifications}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="sound" className="font-medium">Azan Sound</Label>
+                          <p className="text-sm text-muted-foreground">Play azan audio</p>
+                        </div>
+                        <Switch
+                          id="sound"
+                          checked={sound}
+                          onCheckedChange={setSound}
+                        />
+                      </div>
+
+                      <Button variant="outline" className="w-full justify-start">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        Change Location
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Separator />
+                </>
+              )}
+
+              {/* Theme Settings */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Appearance</h3>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {isDarkMode ? <Moon className="h-5 w-5 text-primary" /> : <Sun className="h-5 w-5 text-primary" />}
+                    <div>
+                      <Label htmlFor="darkmode" className="font-medium">Dark Mode</Label>
+                      <p className="text-sm text-muted-foreground">Switch between themes</p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="darkmode"
+                    checked={isDarkMode}
+                    onCheckedChange={onToggleDarkMode}
+                  />
                 </div>
-              </Card>
+              </div>
+
+              {user && (
+                <>
+                  <Separator />
+
+                  {/* Additional Settings */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">More Options</h3>
+                    
+                    <div className="space-y-3">
+                      <Button variant="outline" className="w-full justify-start">
+                        <Bell className="h-4 w-4 mr-2" />
+                        Notification Settings
+                      </Button>
+                      
+                      <Button variant="outline" className="w-full justify-start">
+                        <Volume2 className="h-4 w-4 mr-2" />
+                        Sound Settings
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Logout Button */}
+                  <Button 
+                    variant="destructive" 
+                    className="w-full justify-start"
+                    onClick={handleLogout}
+                    disabled={loading}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    {loading ? "Logging out..." : "Logout"}
+                  </Button>
+                </>
+              )}
             </div>
-          </div>
+          )}
 
-          <Separator />
+          {currentView === 'login' && (
+            <LoginForm
+              onBack={resetToMain}
+              onSwitchToSignup={() => setCurrentView('signup')}
+              onForgotPassword={() => setCurrentView('forgot-password')}
+            />
+          )}
 
-          {/* Additional Settings */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">More Options</h3>
-            
-            <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start">
-                <Bell className="h-4 w-4 mr-2" />
-                Notification Settings
-              </Button>
-              
-              <Button variant="outline" className="w-full justify-start">
-                <Volume2 className="h-4 w-4 mr-2" />
-                Sound Settings
-              </Button>
-            </div>
-          </div>
+          {currentView === 'signup' && (
+            <SignupForm
+              onBack={resetToMain}
+              onSwitchToLogin={() => setCurrentView('login')}
+            />
+          )}
 
-          <Separator />
+          {currentView === 'forgot-password' && (
+            <ForgotPasswordForm
+              onBack={() => setCurrentView('login')}
+            />
+          )}
 
-          {/* Logout Button */}
-          <Button 
-            variant="destructive" 
-            className="w-full justify-start"
-            size="lg"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          {currentView === 'user-profile' && (
+            <UserProfileForm
+              onBack={resetToMain}
+              onChangePassword={() => setCurrentView('change-password')}
+            />
+          )}
+
+          {currentView === 'change-password' && (
+            <ChangePasswordForm
+              onBack={() => setCurrentView('user-profile')}
+            />
+          )}
         </div>
       </div>
     </>
