@@ -31,6 +31,8 @@ interface SettingsPanelProps {
   onClose: () => void;
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
+  onOpenAuth: (type: 'login' | 'signup') => void;
+  onOpenUserProfile: () => void;
 }
 
 type ViewType = 'main' | 'login' | 'signup' | 'forgot-password' | 'user-profile' | 'change-password';
@@ -40,6 +42,8 @@ export const SettingsPanel = ({
   onClose,
   isDarkMode,
   onToggleDarkMode,
+  onOpenAuth,
+  onOpenUserProfile,
 }: SettingsPanelProps) => {
   const [notifications, setNotifications] = useState(true);
   const [sound, setSound] = useState(true);
@@ -120,7 +124,7 @@ export const SettingsPanel = ({
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      onClick={() => setCurrentView('user-profile')}
+                      onClick={onOpenUserProfile}
                     >
                       <Edit3 className="h-4 w-4" />
                     </Button>
@@ -139,14 +143,14 @@ export const SettingsPanel = ({
                     <div className="space-y-2">
                       <Button 
                         className="w-full"
-                        onClick={() => setCurrentView('login')}
+                        onClick={() => onOpenAuth('login')}
                       >
                         Sign In
                       </Button>
                       <Button 
                         variant="outline" 
                         className="w-full"
-                        onClick={() => setCurrentView('signup')}
+                        onClick={() => onOpenAuth('signup')}
                       >
                         Create Account
                       </Button>
@@ -258,40 +262,6 @@ export const SettingsPanel = ({
                 </>
               )}
             </div>
-          )}
-
-          {currentView === 'login' && (
-            <LoginForm
-              onBack={resetToMain}
-              onSwitchToSignup={() => setCurrentView('signup')}
-              onForgotPassword={() => setCurrentView('forgot-password')}
-            />
-          )}
-
-          {currentView === 'signup' && (
-            <SignupForm
-              onBack={resetToMain}
-              onSwitchToLogin={() => setCurrentView('login')}
-            />
-          )}
-
-          {currentView === 'forgot-password' && (
-            <ForgotPasswordForm
-              onBack={() => setCurrentView('login')}
-            />
-          )}
-
-          {currentView === 'user-profile' && (
-            <UserProfileForm
-              onBack={resetToMain}
-              onChangePassword={() => setCurrentView('change-password')}
-            />
-          )}
-
-          {currentView === 'change-password' && (
-            <ChangePasswordForm
-              onBack={() => setCurrentView('user-profile')}
-            />
           )}
         </div>
       </div>

@@ -13,14 +13,29 @@ export const supabase = {
     onAuthStateChange: (callback: any) => {
       // Mock auth state listener
       const user = localStorage.getItem('mockUser');
-      setTimeout(() => {
-        callback('SIGNED_IN', { user: user ? JSON.parse(user) : null });
-      }, 100);
+      if (user) {
+        const userData = JSON.parse(user);
+        setTimeout(() => {
+          callback('SIGNED_IN', { user: userData });
+        }, 100);
+      }
+      
+      // Listen for storage changes (when user logs in/out in another tab)
+      const handleStorageChange = (e: StorageEvent) => {
+        if (e.key === 'mockUser') {
+          const newUser = e.newValue ? JSON.parse(e.newValue) : null;
+          callback(newUser ? 'SIGNED_IN' : 'SIGNED_OUT', { user: newUser });
+        }
+      };
+      
+      window.addEventListener('storage', handleStorageChange);
       
       return {
         data: {
           subscription: {
-            unsubscribe: () => {}
+            unsubscribe: () => {
+              window.removeEventListener('storage', handleStorageChange);
+            }
           }
         }
       };
@@ -48,6 +63,11 @@ export const supabase = {
       if (user) {
         const { password: _, ...userWithoutPassword } = user;
         localStorage.setItem('mockUser', JSON.stringify(userWithoutPassword));
+        // Trigger storage event for same-tab updates
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'mockUser',
+          newValue: JSON.stringify(userWithoutPassword)
+        }));
         return { 
           data: { user: userWithoutPassword }, 
           error: null 
@@ -71,6 +91,11 @@ export const supabase = {
       };
       
       localStorage.setItem('mockUser', JSON.stringify(newUser));
+      // Trigger storage event for same-tab updates
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'mockUser',
+        newValue: JSON.stringify(newUser)
+      }));
       return { 
         data: { user: newUser }, 
         error: null 
@@ -79,6 +104,11 @@ export const supabase = {
     
     signOut: async () => {
       localStorage.removeItem('mockUser');
+      // Trigger storage event for same-tab updates
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'mockUser',
+        newValue: null
+      }));
       return { error: null };
     },
     

@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { TopHeader } from "@/components/TopHeader";
+import { PrayerHeader } from "@/components/PrayerHeader";
 import { MainPrayerTable } from "@/components/MainPrayerTable";
 import { BottomSection } from "@/components/BottomSection";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { usePrayerTimes } from "@/hooks/usePrayerTimes";
+import { AuthPage } from "@/pages/AuthPage";
+import { UserProfilePage } from "@/pages/UserProfilePage";
 import { useDarkMode } from "@/hooks/useDarkMode";
+import { usePrayerTimes } from "@/hooks/usePrayerTimes";
+
+type AppViewType = 'main' | 'auth-login' | 'auth-signup' | 'user-profile';
 
 const Index = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<AppViewType>('main');
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   
   const {
     currentTime,
@@ -23,37 +30,69 @@ const Index = () => {
     englishDate,
   } = usePrayerTimes();
 
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const handleOpenAuth = (type: 'login' | 'signup') => {
+    setCurrentView(type === 'login' ? 'auth-login' : 'auth-signup');
+    setIsSettingsOpen(false);
+  };
+
+  const handleOpenUserProfile = () => {
+    setCurrentView('user-profile');
+    setIsSettingsOpen(false);
+  };
+
+  const handleBackToMain = () => {
+    setCurrentView('main');
+  };
+
+  if (currentView === 'auth-login' || currentView === 'auth-signup') {
+    return (
+      <AuthPage 
+        onBack={handleBackToMain}
+        initialView={currentView === 'auth-login' ? 'login' : 'signup'}
+      />
+    );
+  }
+
+  if (currentView === 'user-profile') {
+    return (
+      <UserProfilePage onBack={handleBackToMain} />
+    );
+  }
 
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-2 md:p-4">
-        <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
-          {/* Top Header Section */}
-          <TopHeader
-            currentTime={currentTime}
-            currentDate={currentDate}
-            islamicDate={islamicDate}
-            nextPrayer={nextPrayer}
-            timeToNext={timeToNext}
-            jamaatCountdown={jamaatCountdown}
-            onOpenSettings={() => setIsSettingsOpen(true)}
-          />
-
-          {/* Main Prayer Times Table */}
-          <MainPrayerTable
-            prayerTimes={prayerTimes}
-            jumahTime={jumahTime}
-            khutbahTime={khutbahTime}
-          />
-
-          {/* Bottom Section with Dates and Other Times */}
-          <BottomSection
-            englishDate={englishDate}
-            islamicDate={islamicDate}
-            otherTimes={otherTimes}
-          />
-        </div>
+    <div className={`min-h-screen transition-colors duration-300 ${
+      isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'
+    }`}>
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-6 space-y-6">
+        <TopHeader 
+          currentTime={currentTime}
+          currentDate={currentDate}
+          islamicDate={islamicDate}
+          nextPrayer={nextPrayer}
+          timeToNext={timeToNext}
+          jamaatCountdown={jamaatCountdown}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+        />
+        <PrayerHeader
+          currentTime={currentTime}
+          currentDate={currentDate}
+          islamicDate={islamicDate}
+          nextPrayer={nextPrayer}
+          timeToNext={timeToNext}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={toggleDarkMode}
+        />
+        <MainPrayerTable
+          prayerTimes={prayerTimes}
+          jumahTime={jumahTime}
+          khutbahTime={khutbahTime}
+        />
+        <BottomSection
+          englishDate={englishDate}
+          islamicDate={islamicDate}
+          otherTimes={otherTimes}
+        />
       </div>
 
       {/* Settings Panel */}
@@ -62,8 +101,10 @@ const Index = () => {
         onClose={() => setIsSettingsOpen(false)}
         isDarkMode={isDarkMode}
         onToggleDarkMode={toggleDarkMode}
+        onOpenAuth={handleOpenAuth}
+        onOpenUserProfile={handleOpenUserProfile}
       />
-    </>
+    </div>
   );
 };
 
