@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { TopHeader } from "@/components/TopHeader";
-import { PrayerHeader } from "@/components/PrayerHeader";
 import { MainPrayerTable } from "@/components/MainPrayerTable";
 import { BottomSection } from "@/components/BottomSection";
 import { SettingsPanel } from "@/components/SettingsPanel";
@@ -39,15 +38,6 @@ const Index = () => {
           timeToNext={timeToNext}
           jamaatCountdown={jamaatCountdown}
           onOpenSettings={() => setIsSettingsOpen(true)}
-        />
-        <PrayerHeader
-          currentTime={currentTime}
-          currentDate={currentDate}
-          islamicDate={islamicDate}
-          nextPrayer={nextPrayer}
-          timeToNext={timeToNext}
-          isDarkMode={isDarkMode}
-          onToggleDarkMode={toggleDarkMode}
         />
         <MainPrayerTable
           prayerTimes={prayerTimes}
