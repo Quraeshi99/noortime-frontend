@@ -41,7 +41,7 @@ All colors MUST be HSL.
     --prayer-next: 180 35% 55%;
     --prayer-completed: 140 20% 70%;
     --islamic-gold: 45 85% 60%;
-    --crescent: 160 30% 40%;
+    --islamic-crescent: 160 30% 40%;
     
     /* Gradients */
     --gradient-prayer: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
@@ -120,7 +120,7 @@ All colors MUST be HSL.
     --prayer-next: 180 40% 55%;
     --prayer-completed: 140 25% 40%;
     --islamic-gold: 45 80% 65%;
-    --crescent: 160 35% 50%;
+    --islamic-crescent: 160 35% 50%;
     
     /* Dark mode gradients */
     --gradient-prayer: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));

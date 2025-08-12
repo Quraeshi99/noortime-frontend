@@ -59,7 +59,7 @@ export default {
 				},
 				islamic: {
 					gold: 'hsl(var(--islamic-gold))',
-					crescent: 'hsl(var(--crescent))'
+					crescent: 'hsl(var(--islamic-crescent))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
