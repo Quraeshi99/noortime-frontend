@@ -10,7 +10,8 @@ import {
   MapPin,
   X,
   Edit3,
-  Shield
+  Shield,
+  ArrowLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -31,8 +32,6 @@ interface SettingsPanelProps {
   onClose: () => void;
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
-  onOpenAuth: (type: 'login' | 'signup') => void;
-  onOpenUserProfile: () => void;
 }
 
 type ViewType = 'main' | 'login' | 'signup' | 'forgot-password' | 'user-profile' | 'change-password';
@@ -42,8 +41,6 @@ export const SettingsPanel = ({
   onClose,
   isDarkMode,
   onToggleDarkMode,
-  onOpenAuth,
-  onOpenUserProfile,
 }: SettingsPanelProps) => {
   const [notifications, setNotifications] = useState(true);
   const [sound, setSound] = useState(true);
@@ -124,7 +121,7 @@ export const SettingsPanel = ({
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      onClick={onOpenUserProfile}
+                      onClick={() => setCurrentView('user-profile')}
                     >
                       <Edit3 className="h-4 w-4" />
                     </Button>
@@ -143,14 +140,14 @@ export const SettingsPanel = ({
                     <div className="space-y-2">
                       <Button 
                         className="w-full"
-                        onClick={() => onOpenAuth('login')}
+                        onClick={() => setCurrentView('login')}
                       >
                         Sign In
                       </Button>
                       <Button 
                         variant="outline" 
                         className="w-full"
-                        onClick={() => onOpenAuth('signup')}
+                        onClick={() => setCurrentView('signup')}
                       >
                         Create Account
                       </Button>
@@ -261,6 +258,105 @@ export const SettingsPanel = ({
                   </Button>
                 </>
               )}
+            </div>
+          )}
+
+          {currentView === 'login' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={resetToMain}
+                  className="rounded-full"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <h3 className="text-xl font-semibold">Sign In</h3>
+              </div>
+              <LoginForm
+                onBack={resetToMain}
+                onSwitchToSignup={() => setCurrentView('signup')}
+                onForgotPassword={() => setCurrentView('forgot-password')}
+              />
+            </div>
+          )}
+
+          {currentView === 'signup' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={resetToMain}
+                  className="rounded-full"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <h3 className="text-xl font-semibold">Create Account</h3>
+              </div>
+              <SignupForm
+                onBack={resetToMain}
+                onSwitchToLogin={() => setCurrentView('login')}
+              />
+            </div>
+          )}
+
+          {currentView === 'forgot-password' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentView('login')}
+                  className="rounded-full"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <h3 className="text-xl font-semibold">Reset Password</h3>
+              </div>
+              <ForgotPasswordForm
+                onBack={() => setCurrentView('login')}
+              />
+            </div>
+          )}
+
+          {currentView === 'user-profile' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={resetToMain}
+                  className="rounded-full"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <h3 className="text-xl font-semibold">My Profile</h3>
+              </div>
+              <UserProfileForm
+                onBack={resetToMain}
+                onChangePassword={() => setCurrentView('change-password')}
+              />
+            </div>
+          )}
+
+          {currentView === 'change-password' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentView('user-profile')}
+                  className="rounded-full"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <h3 className="text-xl font-semibold">Change Password</h3>
+              </div>
+              <ChangePasswordForm
+                onBack={() => setCurrentView('user-profile')}
+              />
             </div>
           )}
         </div>
