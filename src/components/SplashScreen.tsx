@@ -19,30 +19,25 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   }, [onComplete]);
 
   return (
-    <div className={`fixed inset-0 z-50 bg-gradient-to-br from-primary to-accent flex items-center justify-center transition-opacity duration-300 ${
+    <div className={`fixed inset-0 z-50 bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 ${
       isVisible ? 'opacity-100' : 'opacity-0'
     }`}>
-      <div className="text-center space-y-8 px-4">
-        {/* Full Screen Logo */}
-        <div className="relative flex justify-center animate-bounce">
-          <div className="w-40 h-40 md:w-56 md:h-56 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border-4 border-white/20 shadow-2xl">
-            <div className="text-6xl md:text-8xl">🕌</div>
-          </div>
+      <div className="text-center space-y-6 animate-pulse">
+        <div className="relative flex justify-center">
+          <img 
+            src="/lovable-uploads/39329f85-045b-48c6-88b3-a2d925d41463.png" 
+            alt="Noor Time" 
+            className="w-48 h-48 md:w-64 md:h-64 rounded-3xl shadow-2xl animate-bounce object-cover"
+          />
         </div>
-        
-        {/* App Name */}
-        <div className="space-y-3">
-          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Noor Time
           </h1>
-          <p className="text-white/80 text-lg md:text-xl font-medium tracking-wide">
-            Prayer Times & Islamic Calendar
-          </p>
+          <p className="text-muted-foreground text-sm">Prayer Times & Islamic Calendar</p>
         </div>
-        
-        {/* Loading Animation */}
-        <div className="flex justify-center pt-4">
-          <div className="animate-spin rounded-full h-10 w-10 border-3 border-white/30 border-t-white"></div>
+        <div className="flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
         </div>
       </div>
     </div>
