@@ -3,11 +3,13 @@ import { TopHeader } from "@/components/TopHeader";
 import { MainPrayerTable } from "@/components/MainPrayerTable";
 import { BottomSection } from "@/components/BottomSection";
 import { SettingsPanel } from "@/components/SettingsPanel";
+import { SplashScreen } from "@/components/SplashScreen";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 
 const Index = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   
   const {
@@ -23,6 +25,10 @@ const Index = () => {
     otherTimes,
     englishDate,
   } = usePrayerTimes();
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${

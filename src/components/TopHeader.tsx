@@ -23,21 +23,12 @@ export const TopHeader = ({
 }: TopHeaderProps) => {
   return (
     <div className="space-y-6">
-      {/* Logo Header - Compact Mobile Version */}
+      {/* App Header - Logo Removed */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <img 
-              src="/lovable-uploads/39329f85-045b-48c6-88b3-a2d925d41463.png" 
-              alt="Noor Time" 
-              className="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-md"
-            />
-          </div>
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Noor Time
-            </h1>
-          </div>
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            Noor Time
+          </h1>
         </div>
         <Button
           variant="outline"
