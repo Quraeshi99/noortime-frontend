@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { TopHeader } from "@/components/TopHeader";
 import { MainPrayerTable } from "@/components/MainPrayerTable";
 import { BottomSection } from "@/components/BottomSection";
@@ -11,6 +11,12 @@ const Index = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
+  
+  // Stable callback to prevent infinite re-renders
+  const handleSplashComplete = useCallback(() => {
+    console.log('Splash onComplete called');
+    setShowSplash(false);
+  }, []);
   
   console.log('Index component - showSplash:', showSplash);
   
@@ -30,10 +36,7 @@ const Index = () => {
 
   if (showSplash) {
     console.log('Showing splash screen');
-    return <SplashScreen onComplete={() => {
-      console.log('Splash onComplete called');
-      setShowSplash(false);
-    }} />;
+    return <SplashScreen onComplete={handleSplashComplete} />;
   }
 
   console.log('Showing main app');
