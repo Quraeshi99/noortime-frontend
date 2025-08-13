@@ -12,6 +12,8 @@ const Index = () => {
   const [showSplash, setShowSplash] = useState(true);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   
+  console.log('Index component - showSplash:', showSplash);
+  
   const {
     currentTime,
     currentDate,
@@ -27,9 +29,14 @@ const Index = () => {
   } = usePrayerTimes();
 
   if (showSplash) {
-    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+    console.log('Showing splash screen');
+    return <SplashScreen onComplete={() => {
+      console.log('Splash onComplete called');
+      setShowSplash(false);
+    }} />;
   }
 
+  console.log('Showing main app');
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
       isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'
