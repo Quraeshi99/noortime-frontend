@@ -41,8 +41,8 @@ const Index = () => {
 
   console.log('Showing main app');
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'
+    <div className={`min-h-screen transition-colors duration-300 bg-gradient-to-br ${
+      isDarkMode ? 'from-gray-900 via-gray-800 to-gray-900' : 'from-gray-50 via-white to-gray-100'
     }`}>
       {/* Main Content */}
       <div className="container mx-auto px-2 py-3 space-y-3">
