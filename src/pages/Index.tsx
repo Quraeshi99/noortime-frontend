@@ -60,11 +60,15 @@ const Index = () => {
           jumahTime={jumahTime}
           khutbahTime={khutbahTime}
         />
-        <BottomSection
-          englishDate={englishDate}
-          islamicDate={islamicDate}
-          otherTimes={otherTimes}
-        />
+        
+        {/* Other Times Section - Mobile Only */}
+        <div className="lg:hidden">
+          <BottomSection
+            englishDate={englishDate}
+            islamicDate={islamicDate}
+            otherTimes={otherTimes}
+          />
+        </div>
       </div>
 
       {/* Settings Panel */}
