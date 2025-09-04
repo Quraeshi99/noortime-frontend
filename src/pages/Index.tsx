@@ -45,7 +45,7 @@ const Index = () => {
       isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'
     }`}>
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-6 space-y-6">
+      <div className="container mx-auto px-2 py-3 space-y-3">
         <TopHeader 
           currentTime={currentTime}
           currentDate={currentDate}
@@ -60,15 +60,11 @@ const Index = () => {
           jumahTime={jumahTime}
           khutbahTime={khutbahTime}
         />
-        
-        {/* Other Times Section - Mobile Only */}
-        <div className="lg:hidden">
-          <BottomSection
-            englishDate={englishDate}
-            islamicDate={islamicDate}
-            otherTimes={otherTimes}
-          />
-        </div>
+        <BottomSection
+          englishDate={englishDate}
+          islamicDate={islamicDate}
+          otherTimes={otherTimes}
+        />
       </div>
 
       {/* Settings Panel */}
