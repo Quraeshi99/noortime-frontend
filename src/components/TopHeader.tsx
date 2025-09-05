@@ -25,13 +25,8 @@ export const TopHeader = ({
     <div className="space-y-3">
       {/* Islamic Calligraphy Header */}
       <div className="text-center py-4 bg-gradient-to-r from-islamic-gold/10 via-islamic-crescent/15 to-islamic-gold/10 rounded-xl border border-islamic-gold/30">
-        <div className="space-y-2">
-          <div className="text-xl md:text-2xl font-arabic text-islamic-crescent leading-relaxed" style={{fontFamily: 'Amiri, serif'}}>
-            لَآ إِلَهَ إِلَّا ٱللَّهُ مُحَمَّدٌ رَسُولُ ٱللَّهِ
-          </div>
-          <div className="text-xs text-muted-foreground">
-            La ilaha illa Allah, Muhammad Rasul Allah
-          </div>
+        <div className="text-xl md:text-2xl font-arabic text-islamic-crescent leading-relaxed" style={{fontFamily: 'Amiri, serif'}}>
+          لَآ إِلَهَ إِلَّا ٱللَّهُ مُحَمَّدٌ رَسُولُ ٱللَّهِ
         </div>
         
         {/* Settings Button - Positioned in top right */}
