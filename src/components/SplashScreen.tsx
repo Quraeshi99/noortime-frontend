@@ -20,7 +20,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       setIsVisible(false);
       
       setTimeout(handleComplete, 300);
-    }, 2000); // 2 seconds splash time
+    }, 1800); // 1.8 seconds splash time
 
     return () => {
       console.log('SplashScreen cleanup');

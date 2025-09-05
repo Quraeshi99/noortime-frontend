@@ -23,39 +23,34 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
       <div className="grid grid-cols-4 gap-2 h-full">
         {/* Date Section - Takes 1 column on left */}
         <div className="space-y-1">
-          {/* English Date Card */}
-          <div className="p-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 border border-primary/30 rounded-lg shadow-lg backdrop-blur-sm">
+          {/* Combined Date Card */}
+          <div className="p-2 bg-gradient-to-br from-primary/10 via-islamic-gold/10 to-accent/5 border border-primary/30 rounded-lg shadow-lg backdrop-blur-sm">
             <div className="text-center space-y-1">
-              <div className="w-6 h-6 mx-auto bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white text-xs">📅</span>
+              <div className="flex justify-center space-x-1">
+                <div className="w-5 h-5 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-white text-xs">📅</span>
+                </div>
+                <div className="w-5 h-5 bg-gradient-to-br from-islamic-gold to-islamic-crescent rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-white text-xs">🌙</span>
+                </div>
               </div>
-              <div>
-                <p className="text-[8px] text-muted-foreground font-medium">Eng</p>
-                <p className="text-[10px] font-bold text-foreground leading-tight">
-                  {new Date().toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric' 
-                  })}
-                </p>
-                <p className="text-[7px] text-muted-foreground">
-                  {new Date().toLocaleDateString('en-US', { year: 'numeric' })}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Islamic Date Card */}
-          <div className="p-2 bg-gradient-to-br from-islamic-gold/15 via-islamic-crescent/10 to-islamic-gold/5 border border-islamic-gold/40 rounded-lg shadow-lg backdrop-blur-sm">
-            <div className="text-center space-y-1">
-              <div className="w-6 h-6 mx-auto bg-gradient-to-br from-islamic-gold to-islamic-crescent rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white text-xs">🌙</span>
-              </div>
-              <div>
-                <p className="text-[8px] text-muted-foreground font-medium">Islamic</p>
-                <p className="text-[10px] font-bold text-islamic-crescent leading-tight">
-                  15 Shaban
-                </p>
-                <p className="text-[7px] text-muted-foreground">1446 AH</p>
+              <div className="space-y-0.5">
+                <div>
+                  <p className="text-[8px] text-muted-foreground font-medium">English</p>
+                  <p className="text-[9px] font-bold text-foreground leading-tight">
+                    {new Date().toLocaleDateString('en-US', { 
+                      month: 'short', 
+                      day: 'numeric', 
+                      year: 'numeric' 
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[8px] text-muted-foreground font-medium">Islamic</p>
+                  <p className="text-[9px] font-bold text-islamic-crescent leading-tight">
+                    15 Shaban 1446 AH
+                  </p>
+                </div>
               </div>
             </div>
           </div>
