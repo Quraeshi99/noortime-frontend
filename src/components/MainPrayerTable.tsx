@@ -23,21 +23,32 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
       <div className="grid grid-cols-4 gap-2 h-full">
         {/* Date Section - Takes 1 column on left */}
         <div className="space-y-1">
+          {/* Prayer Status Card */}
+          <div className="p-2 bg-gradient-to-br from-prayer-next/20 via-prayer-active/10 to-accent/5 border border-prayer-next/40 rounded-lg shadow-md">
+            <div className="text-center space-y-0.5">
+              <div className="w-5 h-5 mx-auto bg-gradient-to-br from-prayer-next to-prayer-active rounded-full flex items-center justify-center">
+                <span className="text-white text-xs">⏰</span>
+              </div>
+              <p className="text-[8px] text-prayer-next font-bold">Next: Maghrib</p>
+              <p className="text-[7px] text-muted-foreground">in 2h 15m</p>
+            </div>
+          </div>
+
           {/* Combined Date Card */}
           <div className="p-2 bg-gradient-to-br from-primary/10 via-islamic-gold/10 to-accent/5 border border-primary/30 rounded-lg shadow-lg backdrop-blur-sm">
             <div className="text-center space-y-1">
               <div className="flex justify-center space-x-1">
-                <div className="w-5 h-5 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-4 h-4 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-white text-xs">📅</span>
                 </div>
-                <div className="w-5 h-5 bg-gradient-to-br from-islamic-gold to-islamic-crescent rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-4 h-4 bg-gradient-to-br from-islamic-gold to-islamic-crescent rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-white text-xs">🌙</span>
                 </div>
               </div>
               <div className="space-y-0.5">
                 <div>
-                  <p className="text-[8px] text-muted-foreground font-medium">English</p>
-                  <p className="text-[9px] font-bold text-foreground leading-tight">
+                  <p className="text-[7px] text-muted-foreground font-medium">English</p>
+                  <p className="text-[8px] font-bold text-foreground leading-tight">
                     {new Date().toLocaleDateString('en-US', { 
                       month: 'short', 
                       day: 'numeric', 
@@ -46,8 +57,8 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
                   </p>
                 </div>
                 <div>
-                  <p className="text-[8px] text-muted-foreground font-medium">Islamic</p>
-                  <p className="text-[9px] font-bold text-islamic-crescent leading-tight">
+                  <p className="text-[7px] text-muted-foreground font-medium">Islamic</p>
+                  <p className="text-[8px] font-bold text-islamic-crescent leading-tight">
                     15 Shaban 1446 AH
                   </p>
                 </div>
@@ -55,14 +66,34 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
             </div>
           </div>
 
-          {/* Prayer Status Card */}
-          <div className="p-1.5 bg-gradient-to-br from-prayer-next/20 via-prayer-active/10 to-accent/5 border border-prayer-next/40 rounded-lg shadow-md">
+          {/* Clock Card */}
+          <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-lg shadow-lg">
             <div className="text-center space-y-0.5">
-              <div className="w-5 h-5 mx-auto bg-gradient-to-br from-prayer-next to-prayer-active rounded-full flex items-center justify-center">
-                <span className="text-white text-xs">⏰</span>
+              <div className="w-4 h-4 mx-auto text-primary">
+                <span className="text-xs">🕐</span>
               </div>
-              <p className="text-[8px] text-prayer-next font-bold">Next: Maghrib</p>
-              <p className="text-[7px] text-muted-foreground">in 2h 15m</p>
+              <div className="text-[8px] font-bold font-mono text-primary">
+                {new Date().toLocaleTimeString('en-US', { 
+                  hour12: false,
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </div>
+              <p className="text-[7px] text-muted-foreground">Live Time</p>
+            </div>
+          </div>
+
+          {/* Jamaat Countdown Card */}
+          <div className="p-2 bg-gradient-to-br from-islamic-gold/20 to-islamic-crescent/20 border border-islamic-gold/40 rounded-lg shadow-lg">
+            <div className="text-center space-y-0.5">
+              <div className="w-4 h-4 mx-auto bg-gradient-to-br from-islamic-gold to-islamic-crescent rounded-full flex items-center justify-center">
+                <span className="text-white text-xs">⏱️</span>
+              </div>
+              <p className="text-[7px] text-islamic-crescent font-bold">Jamaat</p>
+              <div className="text-[8px] font-bold font-mono text-islamic-crescent">
+                15:30
+              </div>
+              <p className="text-[7px] text-muted-foreground">Time</p>
             </div>
           </div>
         </div>
