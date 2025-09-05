@@ -41,11 +41,11 @@ const Index = () => {
 
   console.log('Showing main app');
   return (
-    <div className={`min-h-screen transition-colors duration-300 bg-gradient-to-br ${
+    <div className={`min-h-screen overflow-hidden transition-colors duration-300 bg-gradient-to-br ${
       isDarkMode ? 'from-gray-900 via-gray-800 to-gray-900' : 'from-gray-50 via-white to-gray-100'
     }`}>
       {/* Main Content */}
-      <div className="container mx-auto px-2 py-3 space-y-3">
+      <div className="h-screen flex flex-col px-2 py-2 space-y-2">
         <TopHeader 
           currentTime={currentTime}
           currentDate={currentDate}
