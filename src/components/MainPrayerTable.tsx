@@ -26,8 +26,6 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
           {/* Prayer Status Card */}
           <div className="p-2 bg-gradient-to-br from-prayer-next/20 via-prayer-active/10 to-accent/5 border border-prayer-next/40 rounded-lg shadow-md">
             <div className="text-center space-y-0.5">
-              <div className="w-5 h-5 mx-auto bg-gradient-to-br from-prayer-next to-prayer-active rounded-full flex items-center justify-center">
-              </div>
               <p className="text-[8px] text-prayer-next font-bold">Next: Maghrib</p>
               <p className="text-[7px] text-muted-foreground">in 2h 15m</p>
             </div>
@@ -36,12 +34,6 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
           {/* Combined Date Card */}
           <div className="p-2 bg-gradient-to-br from-primary/10 via-islamic-gold/10 to-accent/5 border border-primary/30 rounded-lg shadow-lg backdrop-blur-sm">
             <div className="text-center space-y-1">
-              <div className="flex justify-center space-x-1">
-                <div className="w-4 h-4 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-lg">
-                </div>
-                <div className="w-4 h-4 bg-gradient-to-br from-islamic-gold to-islamic-crescent rounded-full flex items-center justify-center shadow-lg">
-                </div>
-              </div>
               <div className="space-y-0.5">
                 <div>
                   <p className="text-[7px] text-muted-foreground font-medium">English</p>
@@ -66,8 +58,6 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
           {/* Clock Card */}
           <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-lg shadow-lg">
             <div className="text-center space-y-0.5">
-              <div className="w-4 h-4 mx-auto text-primary">
-              </div>
               <div className="text-[8px] font-bold font-mono text-primary">
                 {new Date().toLocaleTimeString('en-US', { 
                   hour12: false,
@@ -82,8 +72,6 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
           {/* Jamaat Countdown Card */}
           <div className="p-2 bg-gradient-to-br from-islamic-gold/20 to-islamic-crescent/20 border border-islamic-gold/40 rounded-lg shadow-lg">
             <div className="text-center space-y-0.5">
-              <div className="w-4 h-4 mx-auto bg-gradient-to-br from-islamic-gold to-islamic-crescent rounded-full flex items-center justify-center">
-              </div>
               <p className="text-[7px] text-islamic-crescent font-bold">Jamaat</p>
               <div className="text-[8px] font-bold font-mono text-islamic-crescent">
                 15:30
