@@ -44,27 +44,38 @@ const Index = () => {
     <div className={`min-h-screen overflow-hidden transition-colors duration-300 bg-gradient-to-br relative ${
       isDarkMode ? 'from-gray-900 via-gray-800 to-gray-900' : 'from-gray-50 via-white to-gray-100'
     }`}>
-      {/* Main Content */}
-      <div className="h-screen flex flex-col px-2 py-2 space-y-2 relative">
-        <TopHeader 
-          currentTime={currentTime}
-          currentDate={currentDate}
-          islamicDate={islamicDate}
-          nextPrayer={nextPrayer}
-          timeToNext={timeToNext}
-          jamaatCountdown={jamaatCountdown}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-        />
-        <MainPrayerTable
-          prayerTimes={prayerTimes}
-          jumahTime={jumahTime}
-          khutbahTime={khutbahTime}
-        />
-        <BottomSection
-          englishDate={englishDate}
-          islamicDate={islamicDate}
-          otherTimes={otherTimes}
-        />
+      {/* Main Content Container */}
+      <div className="h-screen flex flex-col p-3 space-y-3 relative max-w-md mx-auto">
+        {/* Header Section */}
+        <div className="flex-shrink-0">
+          <TopHeader 
+            currentTime={currentTime}
+            currentDate={currentDate}
+            islamicDate={islamicDate}
+            nextPrayer={nextPrayer}
+            timeToNext={timeToNext}
+            jamaatCountdown={jamaatCountdown}
+            onOpenSettings={() => setIsSettingsOpen(true)}
+          />
+        </div>
+        
+        {/* Main Prayer Section - Takes most space */}
+        <div className="flex-1 min-h-0">
+          <MainPrayerTable
+            prayerTimes={prayerTimes}
+            jumahTime={jumahTime}
+            khutbahTime={khutbahTime}
+          />
+        </div>
+        
+        {/* Bottom Section - Additional Times */}
+        <div className="flex-shrink-0">
+          <BottomSection
+            englishDate={englishDate}
+            islamicDate={islamicDate}
+            otherTimes={otherTimes}
+          />
+        </div>
       </div>
 
       {/* Settings Panel */}
