@@ -149,5 +149,34 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* Disable text selection and native mobile interactions for native app feel */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+    /* Disable iOS callout (copy/paste menu) */
+    -webkit-touch-callout: none;
+    
+    /* Disable long press context menu */
+    -webkit-context-menu: none;
+    
+    /* Prevent text highlighting */
+    -webkit-tap-highlight-color: transparent;
+    
+    /* Disable drag and drop */
+    -webkit-user-drag: none;
+    
+    /* Prevent image saving on long press */
+    -webkit-user-modify: none;
+  }
+  
+  /* Allow text selection only for input fields */
+  input, textarea {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+    -webkit-touch-callout: default !important;
   }
 }
