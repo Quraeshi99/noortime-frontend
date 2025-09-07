@@ -19,7 +19,7 @@ export const BottomSection = ({ englishDate, islamicDate, otherTimes }: BottomSe
       <div className="space-y-1">
         <div className="text-center">
           <h3 className="text-[10px] font-bold text-primary py-0.5">
-            ⏰ Other Important Times ⏰
+            Other Important Times
           </h3>
         </div>
 
