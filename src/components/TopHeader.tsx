@@ -1,4 +1,4 @@
-import { Clock, Settings } from "lucide-react";
+import { Clock, Settings, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LocationCard } from "./LocationCard";
@@ -13,6 +13,8 @@ interface TopHeaderProps {
   timeToNext: string;
   jamaatCountdown: string;
   onOpenSettings: () => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
 export const TopHeader = ({
@@ -23,6 +25,8 @@ export const TopHeader = ({
   timeToNext,
   jamaatCountdown,
   onOpenSettings,
+  isDarkMode,
+  onToggleDarkMode,
 }: TopHeaderProps) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
@@ -43,15 +47,25 @@ export const TopHeader = ({
           لَآ إِلَهَ إِلَّا ٱللَّهُ مُحَمَّدٌ رَسُولُ ٱللَّهِ
         </div>
         
-        {/* Settings Button - Positioned in top right */}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onOpenSettings}
-          className="absolute top-2 right-2 h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-        >
-          <Settings className="h-3 w-3" />
-        </Button>
+        {/* Action Buttons - Positioned in top right */}
+        <div className="absolute top-2 right-2 flex gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onToggleDarkMode}
+            className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+          >
+            {isDarkMode ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onOpenSettings}
+            className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+          >
+            <Settings className="h-3 w-3" />
+          </Button>
+        </div>
       </div>
 
       {/* Location Card */}

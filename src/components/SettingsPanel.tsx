@@ -3,8 +3,6 @@ import {
   User, 
   Clock, 
   LogOut, 
-  Moon, 
-  Sun, 
   Bell, 
   Volume2,
   MapPin,
@@ -20,9 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
-import { LoginForm } from "@/components/auth/LoginForm";
-import { SignupForm } from "@/components/auth/SignupForm";
-import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
+import { AuthModal } from "@/components/auth/AuthModal";
 import { UserProfileForm } from "@/components/profile/UserProfileForm";
 import { ChangePasswordForm } from "@/components/profile/ChangePasswordForm";
 import { useToast } from "@/components/ui/use-toast";
@@ -30,21 +26,19 @@ import { useToast } from "@/components/ui/use-toast";
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  isDarkMode: boolean;
-  onToggleDarkMode: () => void;
 }
 
-type ViewType = 'main' | 'login' | 'signup' | 'forgot-password' | 'user-profile' | 'change-password';
+type ViewType = 'main' | 'user-profile' | 'change-password';
 
 export const SettingsPanel = ({
   isOpen,
   onClose,
-  isDarkMode,
-  onToggleDarkMode,
 }: SettingsPanelProps) => {
   const [notifications, setNotifications] = useState(true);
   const [sound, setSound] = useState(true);
   const [currentView, setCurrentView] = useState<ViewType>('main');
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalView, setAuthModalView] = useState<'login' | 'signup'>('login');
   
   const { user, signOut, loading } = useAuth();
   const { toast } = useToast();
@@ -140,14 +134,20 @@ export const SettingsPanel = ({
                     <div className="space-y-2">
                       <Button 
                         className="w-full"
-                        onClick={() => setCurrentView('login')}
+                        onClick={() => {
+                          setAuthModalView('login');
+                          setIsAuthModalOpen(true);
+                        }}
                       >
                         Sign In
                       </Button>
                       <Button 
                         variant="outline" 
                         className="w-full"
-                        onClick={() => setCurrentView('signup')}
+                        onClick={() => {
+                          setAuthModalView('signup');
+                          setIsAuthModalOpen(true);
+                        }}
                       >
                         Create Account
                       </Button>
@@ -203,25 +203,6 @@ export const SettingsPanel = ({
                 </>
               )}
 
-              {/* Theme Settings */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Appearance</h3>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {isDarkMode ? <Moon className="h-5 w-5 text-primary" /> : <Sun className="h-5 w-5 text-primary" />}
-                    <div>
-                      <Label htmlFor="darkmode" className="font-medium">Dark Mode</Label>
-                      <p className="text-sm text-muted-foreground">Switch between themes</p>
-                    </div>
-                  </div>
-                  <Switch
-                    id="darkmode"
-                    checked={isDarkMode}
-                    onCheckedChange={onToggleDarkMode}
-                  />
-                </div>
-              </div>
 
               {user && (
                 <>
@@ -261,65 +242,6 @@ export const SettingsPanel = ({
             </div>
           )}
 
-          {currentView === 'login' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={resetToMain}
-                  className="rounded-full"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <h3 className="text-xl font-semibold">Sign In</h3>
-              </div>
-              <LoginForm
-                onBack={resetToMain}
-                onSwitchToSignup={() => setCurrentView('signup')}
-                onForgotPassword={() => setCurrentView('forgot-password')}
-              />
-            </div>
-          )}
-
-          {currentView === 'signup' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={resetToMain}
-                  className="rounded-full"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <h3 className="text-xl font-semibold">Create Account</h3>
-              </div>
-              <SignupForm
-                onBack={resetToMain}
-                onSwitchToLogin={() => setCurrentView('login')}
-              />
-            </div>
-          )}
-
-          {currentView === 'forgot-password' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setCurrentView('login')}
-                  className="rounded-full"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <h3 className="text-xl font-semibold">Reset Password</h3>
-              </div>
-              <ForgotPasswordForm
-                onBack={() => setCurrentView('login')}
-              />
-            </div>
-          )}
 
           {currentView === 'user-profile' && (
             <div className="space-y-6">
@@ -361,6 +283,13 @@ export const SettingsPanel = ({
           )}
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialView={authModalView}
+      />
     </>
   );
 };

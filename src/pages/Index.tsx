@@ -48,15 +48,17 @@ const Index = () => {
       <div className="h-screen flex flex-col p-3 space-y-3 relative max-w-md mx-auto">
         {/* Header Section */}
         <div className="flex-shrink-0">
-          <TopHeader 
-            currentTime={currentTime}
-            currentDate={currentDate}
-            islamicDate={islamicDate}
-            nextPrayer={nextPrayer}
-            timeToNext={timeToNext}
-            jamaatCountdown={jamaatCountdown}
-            onOpenSettings={() => setIsSettingsOpen(true)}
-          />
+        <TopHeader
+          currentTime={currentTime}
+          currentDate={currentDate}
+          islamicDate={islamicDate}
+          nextPrayer={nextPrayer}
+          timeToNext={timeToNext}
+          jamaatCountdown={jamaatCountdown}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={toggleDarkMode}
+        />
         </div>
         
         {/* Main Prayer Section - Takes most space */}
@@ -79,12 +81,10 @@ const Index = () => {
       </div>
 
       {/* Settings Panel */}
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={toggleDarkMode}
-      />
+        <SettingsPanel
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+        />
     </div>
   );
 };
