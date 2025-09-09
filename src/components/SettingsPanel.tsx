@@ -19,16 +19,15 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthModal } from "@/components/auth/AuthModal";
-import { UserProfileForm } from "@/components/profile/UserProfileForm";
-import { ChangePasswordForm } from "@/components/profile/ChangePasswordForm";
-import { useToast } from "@/components/ui/use-toast";
+import { ProfileModal } from "@/components/profile/ProfileModal";
+import { useToast } from "@/hooks/use-toast";
 
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type ViewType = 'main' | 'user-profile' | 'change-password';
+type ViewType = 'main';
 
 export const SettingsPanel = ({
   isOpen,
@@ -38,6 +37,7 @@ export const SettingsPanel = ({
   const [sound, setSound] = useState(true);
   const [currentView, setCurrentView] = useState<ViewType>('main');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [authModalView, setAuthModalView] = useState<'login' | 'signup'>('login');
   
   const { user, signOut, loading } = useAuth();
@@ -60,9 +60,6 @@ export const SettingsPanel = ({
     }
   };
 
-  const resetToMain = () => {
-    setCurrentView('main');
-  };
 
   if (!isOpen) return null;
 
@@ -75,7 +72,7 @@ export const SettingsPanel = ({
       />
       
       {/* Settings Panel */}
-      <div className={`fixed left-0 top-0 h-full w-[45%] bg-background border-r shadow-2xl z-50 transform transition-transform duration-300 ${
+      <div className={`fixed left-0 top-0 h-full w-full sm:w-[400px] md:w-[450px] bg-background border-r shadow-2xl z-50 transform transition-transform duration-300 ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         
@@ -117,7 +114,7 @@ export const SettingsPanel = ({
                     <Button 
                       variant="ghost" 
                       size="icon"
-                      onClick={() => setCurrentView('user-profile')}
+                      onClick={() => setIsProfileModalOpen(true)}
                       className="h-8 w-8 rounded-full"
                     >
                       <Edit3 className="h-3 w-3" />
@@ -229,46 +226,6 @@ export const SettingsPanel = ({
               )}
             </div>
           )}
-
-
-          {currentView === 'user-profile' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={resetToMain}
-                  className="rounded-full"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <h3 className="text-xl font-semibold">My Profile</h3>
-              </div>
-              <UserProfileForm
-                onBack={resetToMain}
-                onChangePassword={() => setCurrentView('change-password')}
-              />
-            </div>
-          )}
-
-          {currentView === 'change-password' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setCurrentView('user-profile')}
-                  className="rounded-full"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <h3 className="text-xl font-semibold">Change Password</h3>
-              </div>
-              <ChangePasswordForm
-                onBack={() => setCurrentView('user-profile')}
-              />
-            </div>
-          )}
         </div>
       </div>
 
@@ -277,6 +234,13 @@ export const SettingsPanel = ({
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         initialView={authModalView}
+      />
+
+      {/* Profile Modal */}
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        initialView="profile"
       />
     </>
   );
