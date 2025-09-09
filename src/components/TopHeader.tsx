@@ -41,30 +41,31 @@ export const TopHeader = ({
 
   return (
     <div className="space-y-3">
+      {/* Top Action Bar */}
+      <div className="flex justify-between items-center mb-3">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={onToggleDarkMode}
+          className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+        >
+          {isDarkMode ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
+        </Button>
+        
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={onOpenSettings}
+          className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+        >
+          <Settings className="h-3 w-3" />
+        </Button>
+      </div>
+
       {/* Islamic Calligraphy Header */}
-      <div className="relative text-center py-4 bg-gradient-to-r from-islamic-gold/10 via-islamic-crescent/15 to-islamic-gold/10 rounded-xl border border-islamic-gold/30">
+      <div className="text-center py-4 bg-gradient-to-r from-islamic-gold/10 via-islamic-crescent/15 to-islamic-gold/10 rounded-xl border border-islamic-gold/30">
         <div className="text-xl md:text-2xl font-arabic text-islamic-crescent leading-relaxed" style={{fontFamily: 'Amiri, serif'}}>
           لَآ إِلَهَ إِلَّا ٱللَّهُ مُحَمَّدٌ رَسُولُ ٱللَّهِ
-        </div>
-        
-        {/* Action Buttons - Positioned in top right */}
-        <div className="absolute top-2 right-2 flex gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={onToggleDarkMode}
-            className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-          >
-            {isDarkMode ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={onOpenSettings}
-            className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-          >
-            <Settings className="h-3 w-3" />
-          </Button>
         </div>
       </div>
 

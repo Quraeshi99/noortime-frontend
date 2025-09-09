@@ -98,62 +98,62 @@ export const SettingsPanel = ({
             <div className="space-y-6">
               {/* User Profile Section */}
               {user ? (
-                <Card className="p-4 bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20">
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border border-primary/10">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-12 w-12">
+                    <Avatar className="h-10 w-10 ring-2 ring-primary/20">
                       <AvatarImage src="/placeholder-avatar.jpg" />
-                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-sm">
                         {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-foreground truncate">
+                      <h3 className="font-semibold text-foreground text-sm truncate">
                         {user.user_metadata?.full_name || 'User'}
                       </h3>
-                      <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
+                  </div>
+                  <div className="flex gap-1">
                     <Button 
                       variant="ghost" 
-                      size="sm"
+                      size="icon"
                       onClick={() => setCurrentView('user-profile')}
+                      className="h-8 w-8 rounded-full"
                     >
-                      <Edit3 className="h-4 w-4" />
+                      <Edit3 className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={handleLogout}
+                      disabled={loading}
+                      className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      <LogOut className="h-3 w-3" />
                     </Button>
                   </div>
-                </Card>
+                </div>
               ) : (
-                <Card className="p-6 text-center">
-                  <div className="space-y-4">
-                    <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                      <User className="h-6 w-6 text-primary" />
+                <div className="text-center p-4">
+                  <div className="space-y-3">
+                    <div className="mx-auto w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <User className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold">Welcome!</h3>
-                      <p className="text-sm text-muted-foreground">Sign in to access your account</p>
+                      <h3 className="font-semibold text-sm">Welcome!</h3>
+                      <p className="text-xs text-muted-foreground">Sign in to your account</p>
                     </div>
-                    <div className="space-y-2">
-                      <Button 
-                        className="w-full"
-                        onClick={() => {
-                          setAuthModalView('login');
-                          setIsAuthModalOpen(true);
-                        }}
-                      >
-                        Sign In
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => {
-                          setAuthModalView('signup');
-                          setIsAuthModalOpen(true);
-                        }}
-                      >
-                        Create Account
-                      </Button>
-                    </div>
+                    <Button 
+                      className="w-full h-9"
+                      onClick={() => {
+                        setAuthModalView('login');
+                        setIsAuthModalOpen(true);
+                      }}
+                    >
+                      Sign In
+                    </Button>
                   </div>
-                </Card>
+                </div>
               )}
 
               {user && (
@@ -225,18 +225,6 @@ export const SettingsPanel = ({
                     </div>
                   </div>
 
-                  <Separator />
-
-                  {/* Logout Button */}
-                  <Button 
-                    variant="destructive" 
-                    className="w-full justify-start"
-                    onClick={handleLogout}
-                    disabled={loading}
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    {loading ? "Logging out..." : "Logout"}
-                  </Button>
                 </>
               )}
             </div>
