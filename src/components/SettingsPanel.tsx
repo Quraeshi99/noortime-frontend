@@ -71,10 +71,10 @@ export const SettingsPanel = ({
         onClick={onClose}
       />
       
-      {/* Settings Panel */}
-      <div className={`fixed left-0 top-0 h-full w-[90%] sm:w-[60%] md:w-[45%] lg:w-[400px] bg-background border-r shadow-2xl z-50 transform transition-transform duration-300 ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+        {/* Settings Panel */}
+        <div className={`fixed left-0 top-0 h-full w-[85%] sm:w-[60%] md:w-[45%] lg:w-[400px] bg-background border-r shadow-2xl z-50 transform transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
         
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b">
@@ -90,32 +90,32 @@ export const SettingsPanel = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6">
           {currentView === 'main' && (
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-3 sm:space-y-6">
               {/* User Profile Section */}
               {user ? (
                 <div className="flex items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border border-primary/10">
-                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                    <Avatar className="h-8 w-8 sm:h-10 sm:w-10 ring-2 ring-primary/20 flex-shrink-0">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <Avatar className="h-7 w-7 sm:h-10 sm:w-10 ring-2 ring-primary/20 flex-shrink-0">
                       <AvatarImage src="/placeholder-avatar.jpg" />
-                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-xs sm:text-sm">
+                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-xs">
                         {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-foreground text-xs sm:text-sm truncate">
+                      <h3 className="font-semibold text-foreground text-xs truncate">
                         {user.user_metadata?.full_name || 'User'}
                       </h3>
-                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
                   </div>
-                  <div className="flex gap-1 flex-shrink-0">
+                  <div className="flex flex-col gap-1 flex-shrink-0">
                     <Button 
                       variant="ghost" 
                       size="icon"
                       onClick={() => setIsProfileModalOpen(true)}
-                      className="h-7 w-7 sm:h-8 sm:w-8 rounded-full"
+                      className="h-6 w-6 sm:h-8 sm:w-8 rounded-full"
                     >
                       <Edit3 className="h-3 w-3" />
                     </Button>
@@ -124,24 +124,24 @@ export const SettingsPanel = ({
                       size="icon"
                       onClick={handleLogout}
                       disabled={loading}
-                      className="h-7 w-7 sm:h-8 sm:w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
+                      className="h-6 w-6 sm:h-8 sm:w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
                     >
                       <LogOut className="h-3 w-3" />
                     </Button>
                   </div>
                 </div>
               ) : (
-                <div className="text-center p-3 sm:p-4">
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="mx-auto w-8 h-8 sm:w-10 sm:h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                <div className="text-center p-2 sm:p-4">
+                  <div className="space-y-2">
+                    <div className="mx-auto w-7 h-7 sm:w-10 sm:h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <User className="h-3 w-3 sm:h-5 sm:w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-xs sm:text-sm">Welcome!</h3>
-                      <p className="text-xs text-muted-foreground">Sign in to your account</p>
+                      <h3 className="font-semibold text-xs">Welcome!</h3>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Sign in to your account</p>
                     </div>
                     <Button 
-                      className="w-full h-8 sm:h-9 text-xs sm:text-sm"
+                      className="w-full h-7 sm:h-9 text-xs"
                       onClick={() => {
                         setAuthModalView('login');
                         setIsAuthModalOpen(true);
@@ -158,17 +158,17 @@ export const SettingsPanel = ({
                   <Separator />
 
                   {/* Prayer Time Settings */}
-                  <div className="space-y-3 sm:space-y-4">
-                    <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                      <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                      Prayer Time Settings
+                  <div className="space-y-2 sm:space-y-4">
+                    <h3 className="text-sm sm:text-lg font-semibold flex items-center gap-2">
+                      <Clock className="h-3 w-3 sm:h-5 sm:w-5 text-primary" />
+                      Prayer Settings
                     </h3>
                     
-                    <div className="space-y-3 sm:space-y-4">
+                    <div className="space-y-2 sm:space-y-4">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <Label htmlFor="notifications" className="font-medium text-xs sm:text-sm">Prayer Notifications</Label>
-                          <p className="text-xs text-muted-foreground">Get notified before prayer times</p>
+                          <Label htmlFor="notifications" className="font-medium text-[10px] sm:text-sm">Notifications</Label>
+                          <p className="text-[9px] sm:text-xs text-muted-foreground">Prayer alerts</p>
                         </div>
                         <Switch
                           id="notifications"
@@ -179,8 +179,8 @@ export const SettingsPanel = ({
 
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <Label htmlFor="sound" className="font-medium text-xs sm:text-sm">Azan Sound</Label>
-                          <p className="text-xs text-muted-foreground">Play azan audio</p>
+                          <Label htmlFor="sound" className="font-medium text-[10px] sm:text-sm">Sound</Label>
+                          <p className="text-[9px] sm:text-xs text-muted-foreground">Azan audio</p>
                         </div>
                         <Switch
                           id="sound"
@@ -189,9 +189,9 @@ export const SettingsPanel = ({
                         />
                       </div>
 
-                      <Button variant="outline" className="w-full justify-start h-8 sm:h-10 text-xs sm:text-sm">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        Change Location
+                      <Button variant="outline" className="w-full justify-start h-7 sm:h-10 text-[10px] sm:text-sm">
+                        <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                        Location
                       </Button>
                     </div>
                   </div>
@@ -206,18 +206,18 @@ export const SettingsPanel = ({
                   <Separator />
 
                   {/* Additional Settings */}
-                  <div className="space-y-3 sm:space-y-4">
-                    <h3 className="text-base sm:text-lg font-semibold">More Options</h3>
+                  <div className="space-y-2 sm:space-y-4">
+                    <h3 className="text-sm sm:text-lg font-semibold">More</h3>
                     
-                    <div className="space-y-2 sm:space-y-3">
-                      <Button variant="outline" className="w-full justify-start h-8 sm:h-10 text-xs sm:text-sm">
-                        <Bell className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-                        Notification Settings
+                    <div className="space-y-1 sm:space-y-3">
+                      <Button variant="outline" className="w-full justify-start h-7 sm:h-10 text-[10px] sm:text-sm">
+                        <Bell className="h-3 w-3 mr-1 sm:mr-2" />
+                        Notifications
                       </Button>
                       
-                      <Button variant="outline" className="w-full justify-start h-8 sm:h-10 text-xs sm:text-sm">
-                        <Volume2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-                        Sound Settings
+                      <Button variant="outline" className="w-full justify-start h-7 sm:h-10 text-[10px] sm:text-sm">
+                        <Volume2 className="h-3 w-3 mr-1 sm:mr-2" />
+                        Sounds
                       </Button>
                     </div>
                   </div>
