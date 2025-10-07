@@ -67,12 +67,12 @@ export const SettingsPanel = ({
     <>
       {/* Backdrop with blur */}
       <div 
-        className="fixed inset-0 bg-black/30 backdrop-blur-md z-40 transition-all duration-300"
+        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-all duration-300"
         onClick={onClose}
       />
       
-        {/* Settings Panel with Glassmorphism */}
-        <div className={`fixed left-0 top-0 h-full w-[85%] sm:w-[60%] md:w-[45%] lg:w-[400px] glass border-r shadow-2xl z-50 transform transition-transform duration-300 ${
+        {/* Settings Panel */}
+        <div className={`fixed left-0 top-0 h-full w-[85%] sm:w-[60%] md:w-[45%] lg:w-[400px] bg-background border-r shadow-2xl z-50 transform transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
         
