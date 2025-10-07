@@ -41,29 +41,29 @@ export const TopHeader = ({
 
   return (
     <div className="space-y-3">
-      {/* Top Action Bar */}
-      <div className="flex justify-between items-center mb-3">
+      {/* Top Action Bar with Glassmorphism */}
+      <div className="glass-light rounded-xl p-3 flex justify-between items-center shadow-md">
         <Button
-          variant="outline"
+          variant="neu"
           size="icon"
           onClick={onToggleDarkMode}
-          className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+          className="h-9 w-9 rounded-full"
         >
-          {isDarkMode ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
+          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
         
         <Button
-          variant="outline"
+          variant="neu"
           size="icon"
           onClick={onOpenSettings}
-          className="h-8 w-8 rounded-lg border hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+          className="h-9 w-9 rounded-full"
         >
-          <Settings className="h-3 w-3" />
+          <Settings className="h-4 w-4" />
         </Button>
       </div>
 
-      {/* Islamic Calligraphy Header */}
-      <div className="text-center py-4 bg-gradient-to-r from-islamic-gold/10 via-islamic-crescent/15 to-islamic-gold/10 rounded-xl border border-islamic-gold/30">
+      {/* Islamic Calligraphy Header with Glassmorphism */}
+      <div className="glass text-center py-4 rounded-xl border border-islamic-gold/30 shadow-lg">
         <div className="text-xl md:text-2xl font-arabic text-islamic-crescent leading-relaxed" style={{fontFamily: 'Amiri, serif'}}>
           لَآ إِلَهَ إِلَّا ٱللَّهُ مُحَمَّدٌ رَسُولُ ٱللَّهِ
         </div>
