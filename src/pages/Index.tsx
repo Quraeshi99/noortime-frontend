@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { TopHeader } from "@/components/TopHeader";
 import { MainPrayerTable } from "@/components/MainPrayerTable";
 import { BottomSection } from "@/components/BottomSection";
+import { AppFooter } from "@/components/AppFooter";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { SplashScreen } from "@/components/SplashScreen";
 import { useDarkMode } from "@/hooks/useDarkMode";
@@ -45,7 +46,7 @@ const Index = () => {
       isDarkMode ? 'from-gray-900 via-gray-800 to-gray-900' : 'from-gray-50 via-white to-gray-100'
     }`}>
       {/* Main Content Container */}
-      <div className="h-screen flex flex-col p-3 space-y-3 relative max-w-md mx-auto">
+      <div className="h-screen flex flex-col p-3 pb-20 space-y-3 relative max-w-md mx-auto">
         {/* Header Section */}
         <div className="flex-shrink-0">
         <TopHeader
@@ -55,9 +56,6 @@ const Index = () => {
           nextPrayer={nextPrayer}
           timeToNext={timeToNext}
           jamaatCountdown={jamaatCountdown}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          isDarkMode={isDarkMode}
-          onToggleDarkMode={toggleDarkMode}
         />
         </div>
         
@@ -79,6 +77,13 @@ const Index = () => {
           />
         </div>
       </div>
+
+      {/* Footer Navigation */}
+      <AppFooter
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={toggleDarkMode}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+      />
 
       {/* Settings Panel */}
         <SettingsPanel
