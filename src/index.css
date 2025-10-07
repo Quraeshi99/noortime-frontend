@@ -52,6 +52,16 @@ All colors MUST be HSL.
     --shadow-prayer: 0 8px 32px hsl(var(--primary) / 0.15);
     --shadow-card: 0 4px 16px hsl(var(--primary) / 0.08);
     --shadow-glow: 0 0 24px hsl(var(--islamic-gold) / 0.3);
+    
+    /* Glassmorphism */
+    --glass-bg: hsl(var(--background) / 0.75);
+    --glass-border: hsl(var(--border) / 0.3);
+    --glass-blur: 16px;
+    
+    /* Neumorphism */
+    --neu-shadow-light: 6px 6px 12px hsl(var(--primary) / 0.12), -6px -6px 12px hsl(var(--background) / 0.8);
+    --neu-shadow-dark: 4px 4px 8px hsl(var(--primary) / 0.15), -4px -4px 8px hsl(var(--background) / 0.5);
+    --neu-inset: inset 4px 4px 8px hsl(var(--primary) / 0.08), inset -4px -4px 8px hsl(var(--background) / 0.9);
 
     --radius: 0.75rem;
 
@@ -131,6 +141,16 @@ All colors MUST be HSL.
     --shadow-prayer: 0 8px 32px hsl(var(--primary) / 0.25);
     --shadow-card: 0 4px 16px hsl(var(--primary) / 0.15);
     --shadow-glow: 0 0 24px hsl(var(--islamic-gold) / 0.4);
+    
+    /* Dark Glassmorphism */
+    --glass-bg: hsl(var(--background) / 0.6);
+    --glass-border: hsl(var(--border) / 0.2);
+    --glass-blur: 20px;
+    
+    /* Dark Neumorphism */
+    --neu-shadow-light: 6px 6px 12px hsl(0 0% 0% / 0.3), -6px -6px 12px hsl(var(--background) / 0.1);
+    --neu-shadow-dark: 4px 4px 8px hsl(0 0% 0% / 0.4), -4px -4px 8px hsl(var(--background) / 0.15);
+    --neu-inset: inset 4px 4px 8px hsl(0 0% 0% / 0.3), inset -4px -4px 8px hsl(var(--background) / 0.1);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -178,5 +198,35 @@ All colors MUST be HSL.
     -ms-user-select: text !important;
     user-select: text !important;
     -webkit-touch-callout: default !important;
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism utilities */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+  }
+  
+  .glass-light {
+    background: hsl(var(--background) / 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.4);
+  }
+  
+  /* Neumorphism utilities */
+  .neu-raised {
+    box-shadow: var(--neu-shadow-light);
+  }
+  
+  .neu-pressed {
+    box-shadow: var(--neu-inset);
+  }
+  
+  .neu-flat {
+    box-shadow: var(--neu-shadow-dark);
   }
 }

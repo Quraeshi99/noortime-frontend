@@ -23,16 +23,16 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
       <div className="grid grid-cols-4 gap-2 h-full">
         {/* Date Section - Takes 1 column on left */}
         <div className="space-y-1">
-          {/* Prayer Status Card */}
-          <div className="p-2 bg-gradient-to-br from-prayer-next/20 via-prayer-active/10 to-accent/5 border border-prayer-next/40 rounded-lg shadow-md">
+          {/* Prayer Status Card with Neumorphism */}
+          <div className="p-2 neu-raised bg-gradient-to-br from-prayer-next/10 to-accent/5 rounded-lg">
             <div className="text-center space-y-0.5">
               <p className="text-[8px] text-prayer-next font-bold">Next: Maghrib</p>
               <p className="text-[7px] text-muted-foreground">in 2h 15m</p>
             </div>
           </div>
 
-          {/* Combined Date Card */}
-          <div className="p-2 bg-gradient-to-br from-primary/10 via-islamic-gold/10 to-accent/5 border border-primary/30 rounded-lg shadow-lg backdrop-blur-sm">
+          {/* Combined Date Card with Glass */}
+          <div className="p-2 glass-light rounded-lg shadow-lg">
             <div className="text-center space-y-1">
               <div className="space-y-0.5">
                 <div>
@@ -55,8 +55,8 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
             </div>
           </div>
 
-          {/* Clock Card */}
-          <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-lg shadow-lg">
+          {/* Clock Card with Glass */}
+          <div className="p-2 glass-light rounded-lg shadow-lg">
             <div className="text-center space-y-0.5">
               <div className="text-[8px] font-bold font-mono text-primary">
                 {new Date().toLocaleTimeString('en-US', { 
@@ -69,8 +69,8 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
             </div>
           </div>
 
-          {/* Jamaat Countdown Card */}
-          <div className="p-2 bg-gradient-to-br from-islamic-gold/20 to-islamic-crescent/20 border border-islamic-gold/40 rounded-lg shadow-lg">
+          {/* Jamaat Countdown Card with Neumorphism */}
+          <div className="p-2 neu-raised bg-gradient-to-br from-islamic-gold/15 to-islamic-crescent/10 rounded-lg">
             <div className="text-center space-y-0.5">
               <p className="text-[7px] text-islamic-crescent font-bold">Jamaat</p>
               <div className="text-[8px] font-bold font-mono text-islamic-crescent">
