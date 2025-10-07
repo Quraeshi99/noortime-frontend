@@ -21,7 +21,7 @@ export const LocationCard = ({ onEditLocation }: LocationCardProps) => {
   const isMosqueConnected = userLocation.type === 'mosque';
 
   return (
-    <Card className="relative overflow-hidden glass-light shadow-md">
+    <Card className="relative overflow-hidden bg-gradient-to-r from-islamic-crescent/5 via-primary/5 to-islamic-gold/5 border border-islamic-gold/20 shadow-sm">
       <div className="p-3">
         <div className="flex items-start justify-between gap-2">
           {/* Location Info */}
@@ -59,12 +59,12 @@ export const LocationCard = ({ onEditLocation }: LocationCardProps) => {
             )}
           </div>
 
-          {/* Edit Button with Neumorphism */}
+          {/* Edit Button */}
           <Button
-            variant="neu"
+            variant="ghost"
             size="icon"
             onClick={onEditLocation}
-            className="h-8 w-8 rounded-full flex-shrink-0"
+            className="h-7 w-7 rounded-md hover:bg-islamic-gold/10 hover:text-islamic-crescent transition-colors flex-shrink-0"
             title="Change Location"
           >
             <Edit3 className="h-3.5 w-3.5" />
