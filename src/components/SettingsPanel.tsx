@@ -25,6 +25,8 @@ import { useToast } from "@/hooks/use-toast";
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
 type ViewType = 'main';
@@ -32,6 +34,8 @@ type ViewType = 'main';
 export const SettingsPanel = ({
   isOpen,
   onClose,
+  isDarkMode,
+  onToggleDarkMode,
 }: SettingsPanelProps) => {
   const [notifications, setNotifications] = useState(true);
   const [sound, setSound] = useState(true);
@@ -193,6 +197,18 @@ export const SettingsPanel = ({
                         <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                         Location
                       </Button>
+
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <Label htmlFor="darkmode" className="font-medium text-[10px] sm:text-sm">Dark Mode</Label>
+                          <p className="text-[9px] sm:text-xs text-muted-foreground">Toggle theme</p>
+                        </div>
+                        <Switch
+                          id="darkmode"
+                          checked={isDarkMode}
+                          onCheckedChange={onToggleDarkMode}
+                        />
+                      </div>
                     </div>
                   </div>
 
