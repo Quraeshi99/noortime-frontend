@@ -9,7 +9,9 @@ import {
   X,
   Edit3,
   Shield,
-  ArrowLeft
+  ArrowLeft,
+  Moon,
+  Sun
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -25,6 +27,8 @@ import { useToast } from "@/hooks/use-toast";
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  isDarkMode?: boolean;
+  onToggleDarkMode?: () => void;
 }
 
 type ViewType = 'main';
@@ -32,6 +36,8 @@ type ViewType = 'main';
 export const SettingsPanel = ({
   isOpen,
   onClose,
+  isDarkMode = false,
+  onToggleDarkMode,
 }: SettingsPanelProps) => {
   const [notifications, setNotifications] = useState(true);
   const [sound, setSound] = useState(true);
@@ -201,15 +207,31 @@ export const SettingsPanel = ({
               )}
 
 
-              {user && (
-                <>
-                  <Separator />
+              <Separator />
 
-                  {/* Additional Settings */}
-                  <div className="space-y-2 sm:space-y-4">
-                    <h3 className="text-sm sm:text-lg font-semibold">More</h3>
-                    
-                    <div className="space-y-1 sm:space-y-3">
+              {/* Additional Settings */}
+              <div className="space-y-2 sm:space-y-4">
+                <h3 className="text-sm sm:text-lg font-semibold">More</h3>
+                
+                <div className="space-y-1 sm:space-y-3">
+                  {/* Dark Mode Toggle */}
+                  <div className="flex items-center justify-between gap-2 p-2 sm:p-3 rounded-lg border border-border bg-card">
+                    <div className="min-w-0 flex-1">
+                      <Label htmlFor="darkmode" className="font-medium text-[10px] sm:text-sm flex items-center gap-2">
+                        {isDarkMode ? <Moon className="h-3 w-3 sm:h-4 sm:w-4" /> : <Sun className="h-3 w-3 sm:h-4 sm:w-4" />}
+                        Dark Mode
+                      </Label>
+                      <p className="text-[9px] sm:text-xs text-muted-foreground">Toggle theme</p>
+                    </div>
+                    <Switch
+                      id="darkmode"
+                      checked={isDarkMode}
+                      onCheckedChange={onToggleDarkMode}
+                    />
+                  </div>
+
+                  {user && (
+                    <>
                       <Button variant="outline" className="w-full justify-start h-7 sm:h-10 text-[10px] sm:text-sm">
                         <Bell className="h-3 w-3 mr-1 sm:mr-2" />
                         Notifications
@@ -219,11 +241,10 @@ export const SettingsPanel = ({
                         <Volume2 className="h-3 w-3 mr-1 sm:mr-2" />
                         Sounds
                       </Button>
-                    </div>
-                  </div>
-
-                </>
-              )}
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           )}
         </div>
