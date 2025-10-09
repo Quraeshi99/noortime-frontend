@@ -42,9 +42,13 @@ const MOCK_DATA: PrayerTimesResponse = {
   jumahTime: "01:30",
   khutbahTime: "01:15",
   otherTimes: [
-    { name: "Tahajjud", time: "04:00" },
-    { name: "Ishraq", time: "07:15" },
-    { name: "Midnight", time: "12:00" },
+    { name: "Sehri End", time: "05:15" },
+    { name: "Sunrise", time: "06:45" },
+    { name: "Namaz e Ishrak", time: "07:15" },
+    { name: "Zohra e Kubra Start", time: "11:45" },
+    { name: "Zohra e Kubra End", time: "12:15" },
+    { name: "Sunset", time: "06:15" },
+    { name: "Iftari", time: "06:15" },
   ],
   islamicDate: "15 Rajab 1446",
   englishDate: new Date().toLocaleDateString('en-GB', {
