@@ -42,7 +42,7 @@ const Index = () => {
 
   console.log('Showing main app');
   return (
-    <div className={`min-h-screen overflow-hidden bg-background relative`}>
+    <div className="min-h-screen overflow-hidden bg-background relative transition-colors duration-500 ease-in-out">
       {/* Main Content Container */}
       <div className="h-screen flex flex-col p-3 pb-20 space-y-3 relative max-w-md mx-auto">
         {/* Header Section */}
