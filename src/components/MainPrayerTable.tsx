@@ -16,9 +16,11 @@ interface MainPrayerTableProps {
   prayerTimes: PrayerTime[];
   jumahTime: { azanTime: string; jamaatTime: string };
   khutbahTime: string;
+  islamicDate?: string;
+  englishDate?: string;
 }
 
-export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPrayerTableProps) => {
+export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime, islamicDate, englishDate }: MainPrayerTableProps) => {
   return (
     <Card className="flex-1 p-2 bg-gradient-to-br from-card via-background to-secondary/30 border border-primary/30 rounded-xl shadow-xl backdrop-blur-sm">
       <div className="grid grid-cols-4 gap-2 h-full">
@@ -32,33 +34,9 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
             </div>
           </div>
 
-          {/* Combined Date Card */}
-          <div className="p-2 bg-gradient-to-br from-primary/10 via-islamic-gold/10 to-accent/5 border border-primary/30 rounded-lg shadow-lg backdrop-blur-sm">
-            <div className="text-center space-y-1">
-              <div className="space-y-0.5">
-                <div>
-                  <p className="text-[7px] text-muted-foreground font-medium">English</p>
-                  <p className="text-[8px] font-bold text-foreground leading-tight">
-                    {new Date().toLocaleDateString('en-US', { 
-                      month: 'short', 
-                      day: 'numeric', 
-                      year: 'numeric' 
-                    })}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[7px] text-muted-foreground font-medium">Islamic</p>
-                  <p className="text-[8px] font-bold text-islamic-crescent leading-tight">
-                    15 Shaban 1446 AH
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Clock Card */}
+          {/* Clock Card with Dates */}
           <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-lg shadow-lg">
-            <AnalogClock />
+            <AnalogClock islamicDate={islamicDate} englishDate={englishDate} />
           </div>
 
           {/* Jamaat Countdown Card */}

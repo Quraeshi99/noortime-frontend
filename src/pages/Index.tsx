@@ -65,6 +65,8 @@ const Index = () => {
             prayerTimes={prayerTimes}
             jumahTime={jumahTime}
             khutbahTime={khutbahTime}
+            islamicDate={islamicDate}
+            englishDate={englishDate}
           />
         </div>
         
