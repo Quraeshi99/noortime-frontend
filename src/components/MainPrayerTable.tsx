@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { AnalogClock } from "./AnalogClock";
 
 interface PrayerTime {
   name: string;
@@ -57,16 +58,7 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
 
           {/* Clock Card */}
           <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-lg shadow-lg">
-            <div className="text-center">
-              <div className="text-[10px] font-bold font-mono text-primary bg-primary/10 px-2 py-1 rounded-md border border-primary/20">
-                {new Date().toLocaleTimeString('en-US', { 
-                  hour12: false,
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })}
-              </div>
-            </div>
+            <AnalogClock />
           </div>
 
           {/* Jamaat Countdown Card */}
