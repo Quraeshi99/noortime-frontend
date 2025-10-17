@@ -23,11 +23,36 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
       <div className="grid grid-cols-4 gap-2 h-full">
         {/* Date Section - Takes 1 column on left */}
         <div className="space-y-1">
+          {/* Clock Card */}
+          <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-lg shadow-lg">
+            <div className="text-center">
+              <div className="text-[10px] font-bold font-mono text-primary bg-primary/10 px-2 py-1 rounded-md border border-primary/20">
+                {new Date().toLocaleTimeString('en-US', { 
+                  hour12: false,
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })}
+              </div>
+            </div>
+          </div>
+
           {/* Prayer Status Card */}
           <div className="p-2 bg-gradient-to-br from-prayer-next/20 via-prayer-active/10 to-accent/5 border border-prayer-next/40 rounded-lg shadow-md">
             <div className="text-center space-y-0.5">
               <p className="text-[8px] text-prayer-next font-bold">Next: Maghrib</p>
               <p className="text-[7px] text-muted-foreground">in 2h 15m</p>
+            </div>
+          </div>
+
+          {/* Jamaat Countdown Card */}
+          <div className="p-2 bg-gradient-to-br from-islamic-gold/20 to-islamic-crescent/20 border border-islamic-gold/40 rounded-lg shadow-lg">
+            <div className="text-center space-y-0.5">
+              <p className="text-[7px] text-islamic-crescent font-bold">Jamaat</p>
+              <div className="text-[8px] font-bold font-mono text-islamic-crescent">
+                15:30
+              </div>
+              <p className="text-[7px] text-muted-foreground">Time</p>
             </div>
           </div>
 
@@ -52,31 +77,6 @@ export const MainPrayerTable = ({ prayerTimes, jumahTime, khutbahTime }: MainPra
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Clock Card */}
-          <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 border border-accent/30 rounded-lg shadow-lg">
-            <div className="text-center">
-              <div className="text-[10px] font-bold font-mono text-primary bg-primary/10 px-2 py-1 rounded-md border border-primary/20">
-                {new Date().toLocaleTimeString('en-US', { 
-                  hour12: false,
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Jamaat Countdown Card */}
-          <div className="p-2 bg-gradient-to-br from-islamic-gold/20 to-islamic-crescent/20 border border-islamic-gold/40 rounded-lg shadow-lg">
-            <div className="text-center space-y-0.5">
-              <p className="text-[7px] text-islamic-crescent font-bold">Jamaat</p>
-              <div className="text-[8px] font-bold font-mono text-islamic-crescent">
-                15:30
-              </div>
-              <p className="text-[7px] text-muted-foreground">Time</p>
             </div>
           </div>
         </div>
