@@ -12,18 +12,10 @@ import {
   ChevronRight,
   BookmarkPlus,
   Volume2,
-  Settings,
 } from 'lucide-react';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const AYAHS_PER_PAGE = 5; // Number of ayahs per page for book-like experience
+const AYAHS_PER_PAGE = 5;
 
 export const SurahReader = () => {
   const { surahNumber } = useParams<{ surahNumber: string }>();
@@ -32,6 +24,8 @@ export const SurahReader = () => {
   const [loading, setLoading] = useState(true);
   const [showUrdu, setShowUrdu] = useState(true);
   const [showEnglish, setShowEnglish] = useState(false);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [flipDirection, setFlipDirection] = useState<'next' | 'prev'>('next');
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
@@ -66,17 +60,34 @@ export const SurahReader = () => {
 
   const totalAyahs = surahData.arabic.ayahs?.length || 0;
   const totalPages = Math.ceil(totalAyahs / AYAHS_PER_PAGE);
-  const pages = [];
 
-  // Create pages with ayahs
-  for (let i = 0; i < totalPages; i++) {
-    const startIdx = i * AYAHS_PER_PAGE;
+  const getCurrentPageAyahs = () => {
+    const startIdx = currentPage * AYAHS_PER_PAGE;
     const endIdx = Math.min(startIdx + AYAHS_PER_PAGE, totalAyahs);
-    pages.push({
-      pageNumber: i + 1,
-      ayahs: surahData.arabic.ayahs?.slice(startIdx, endIdx) || [],
-    });
-  }
+    return surahData.arabic.ayahs?.slice(startIdx, endIdx) || [];
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setFlipDirection('next');
+      setIsFlipping(true);
+      setTimeout(() => {
+        setCurrentPage(currentPage + 1);
+        setIsFlipping(false);
+      }, 300);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setFlipDirection('prev');
+      setIsFlipping(true);
+      setTimeout(() => {
+        setCurrentPage(currentPage - 1);
+        setIsFlipping(false);
+      }, 300);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-islamic-gold/5 to-islamic-crescent/5">
@@ -149,76 +160,94 @@ export const SurahReader = () => {
           </div>
         )}
 
-        {/* Book-like Carousel */}
-        <Carousel
-          opts={{
-            align: 'start',
-          }}
-          className="w-full"
-        >
-          <CarouselContent>
-            {pages.map((page) => (
-              <CarouselItem key={page.pageNumber}>
-                <Card className="min-h-[600px] p-8 bg-gradient-to-br from-background to-islamic-gold/5 border-islamic-gold/30 shadow-2xl">
-                  <ScrollArea className="h-[550px]">
-                    <div className="space-y-8">
-                      {page.ayahs.map((ayah) => (
-                        <div
-                          key={ayah.number}
-                          className="p-6 rounded-lg bg-background/50 border border-islamic-gold/20 hover:border-islamic-gold/40 transition-all"
-                        >
-                          {/* Ayah Number */}
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-islamic-gold/30 to-islamic-crescent/30 flex items-center justify-center border-2 border-islamic-gold/40">
-                              <span className="text-sm font-bold text-islamic-crescent">
-                                {ayah.numberInSurah}
-                              </span>
-                            </div>
-                            <Button variant="ghost" size="sm">
-                              <BookmarkPlus className="h-4 w-4" />
-                            </Button>
-                          </div>
-
-                          {/* Arabic Text */}
-                          <p className="text-2xl font-arabic text-right leading-loose mb-6 text-islamic-crescent">
-                            {ayah.text}
-                          </p>
-
-                          {/* Urdu Translation */}
-                          {showUrdu && surahData.urduTranslation && (
-                            <p className="text-lg text-right mb-4 text-muted-foreground leading-relaxed font-urdu">
-                              {surahData.urduTranslation.ayahs[ayah.numberInSurah - 1]?.text}
-                            </p>
-                          )}
-
-                          {/* English Translation */}
-                          {showEnglish && surahData.englishTranslation && (
-                            <p className="text-base text-left text-muted-foreground leading-relaxed">
-                              {surahData.englishTranslation.ayahs[ayah.numberInSurah - 1]?.text}
-                            </p>
-                          )}
+        {/* Book Page with Flip Effect */}
+        <div className="relative w-full max-w-4xl mx-auto perspective-[2000px]">
+          <div 
+            className={`
+              relative min-h-[600px] transition-all duration-500 ease-in-out transform-style-3d
+              ${isFlipping && flipDirection === 'next' ? 'animate-page-flip-next' : ''}
+              ${isFlipping && flipDirection === 'prev' ? 'animate-page-flip-prev' : ''}
+            `}
+          >
+            <Card className="min-h-[600px] p-8 bg-gradient-to-br from-background to-islamic-gold/5 border-islamic-gold/30 shadow-[0_10px_50px_-12px_rgba(0,0,0,0.25)] rounded-lg">
+              <ScrollArea className="h-[520px]">
+                <div className="space-y-8">
+                  {getCurrentPageAyahs().map((ayah) => (
+                    <div
+                      key={ayah.number}
+                      className="p-6 rounded-lg bg-background/50 border border-islamic-gold/20 hover:border-islamic-gold/40 transition-all"
+                    >
+                      {/* Ayah Number */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-islamic-gold/30 to-islamic-crescent/30 flex items-center justify-center border-2 border-islamic-gold/40">
+                          <span className="text-sm font-bold text-islamic-crescent">
+                            {ayah.numberInSurah}
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
+                        <Button variant="ghost" size="sm">
+                          <BookmarkPlus className="h-4 w-4" />
+                        </Button>
+                      </div>
 
-                  {/* Page Number */}
-                  <div className="text-center mt-4 text-sm text-muted-foreground">
-                    Page {page.pageNumber} of {totalPages}
-                  </div>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <CarouselPrevious className="relative left-0 translate-y-0" />
-            <span className="text-sm text-muted-foreground">
-              Swipe or click arrows to turn pages
-            </span>
-            <CarouselNext className="relative right-0 translate-y-0" />
+                      {/* Arabic Text */}
+                      <p className="text-2xl font-arabic text-right leading-loose mb-6 text-islamic-crescent">
+                        {ayah.text}
+                      </p>
+
+                      {/* Urdu Translation */}
+                      {showUrdu && surahData.urduTranslation && (
+                        <p className="text-lg text-right mb-4 text-muted-foreground leading-relaxed font-urdu">
+                          {surahData.urduTranslation.ayahs[ayah.numberInSurah - 1]?.text}
+                        </p>
+                      )}
+
+                      {/* English Translation */}
+                      {showEnglish && surahData.englishTranslation && (
+                        <p className="text-base text-left text-muted-foreground leading-relaxed">
+                          {surahData.englishTranslation.ayahs[ayah.numberInSurah - 1]?.text}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              {/* Page Number */}
+              <div className="text-center mt-4 text-sm text-muted-foreground">
+                Page {currentPage + 1} of {totalPages}
+              </div>
+            </Card>
           </div>
-        </Carousel>
+
+          {/* Navigation Buttons */}
+          <div className="flex items-center justify-between mt-6 px-4">
+            <Button
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+              variant="outline"
+              size="lg"
+              className="gap-2 border-islamic-gold/30 hover:border-islamic-gold/50 hover:bg-islamic-gold/10"
+            >
+              <ChevronLeft className="h-5 w-5" />
+              Previous
+            </Button>
+            
+            <span className="text-sm text-muted-foreground px-4">
+              Tap arrows to turn pages
+            </span>
+            
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages - 1}
+              variant="outline"
+              size="lg"
+              className="gap-2 border-islamic-gold/30 hover:border-islamic-gold/50 hover:bg-islamic-gold/10"
+            >
+              Next
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
