@@ -1,6 +1,7 @@
 import { User, BookOpen, ScanLine, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface AppFooterProps {
   isDarkMode: boolean;
@@ -13,6 +14,7 @@ export const AppFooter = ({
   onToggleDarkMode,
   onOpenSettings,
 }: AppFooterProps) => {
+  const navigate = useNavigate();
   const [comingSoonButton, setComingSoonButton] = useState<string | null>(null);
 
   const handleComingSoon = (buttonName: string) => {
@@ -55,12 +57,12 @@ export const AppFooter = ({
               </span>
             </Button>
 
-            {/* Quran Button - Coming Soon */}
+            {/* Quran Button */}
             <Button
               variant="ghost"
               size="lg"
-              onClick={() => handleComingSoon('quran')}
-              className={`relative flex flex-col items-center gap-1.5 min-w-[65px] rounded-2xl transition-all duration-300 ${
+              onClick={() => navigate('/quran')}
+              className={`flex flex-col items-center gap-1.5 min-w-[65px] rounded-2xl transition-all duration-300 ${
                 isDarkMode 
                   ? 'hover:bg-emerald-500/10 active:bg-emerald-500/20' 
                   : 'hover:bg-emerald-600/10 active:bg-emerald-600/20'
@@ -78,15 +80,6 @@ export const AppFooter = ({
               }`}>
                 Quran
               </span>
-              {comingSoonButton === 'quran' && (
-                <div className={`absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 ${
-                  isDarkMode 
-                    ? 'bg-gray-800 text-gray-200 border border-gray-700' 
-                    : 'bg-white text-gray-700 border border-gray-200 shadow-md'
-                }`}>
-                  Coming Soon
-                </div>
-              )}
             </Button>
 
             {/* Scanner Button - Center Featured - Coming Soon */}
