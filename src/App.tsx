@@ -9,6 +9,8 @@ import QuranPage from "./pages/QuranPage";
 import { SurahReader } from "./components/quran/SurahReader";
 import { SurahsList } from "./components/quran/SurahsList";
 import JuzIndex from "./components/quran/JuzIndex";
+import JuzReader from "./components/quran/JuzReader";
+import PageReader from "./components/quran/PageReader";
 import GoToPage from "./components/quran/GoToPage";
 import GoToSurah from "./components/quran/GoToSurah";
 import Bookmarks from "./components/quran/Bookmarks";
@@ -26,7 +28,9 @@ const App = () => (
           <Route path="/quran" element={<QuranPage />} />
           <Route path="/quran/surahs" element={<SurahsList />} />
           <Route path="/quran/juz" element={<JuzIndex />} />
+          <Route path="/quran/juz/:juzNumber" element={<JuzReader />} />
           <Route path="/quran/page" element={<GoToPage />} />
+          <Route path="/quran/page/:pageNumber" element={<PageReader />} />
           <Route path="/quran/goto-surah" element={<GoToSurah />} />
           <Route path="/quran/bookmarks" element={<Bookmarks />} />
           <Route path="/quran/surah/:surahNumber" element={<SurahReader />} />

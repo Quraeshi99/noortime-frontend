@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ArrowLeft, Search } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const juzData = [
@@ -39,37 +41,66 @@ const juzData = [
 
 const JuzIndex = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredJuz, setFilteredJuz] = useState(juzData);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredJuz(juzData);
+    } else {
+      const filtered = juzData.filter(juz => 
+        juz.number.toString().includes(searchQuery) ||
+        juz.nameUrdu.includes(searchQuery)
+      );
+      setFilteredJuz(filtered);
+    }
+  }, [searchQuery]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-8 px-4">
+    <div className="min-h-screen bg-background py-6 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="outline" onClick={() => navigate('/quran')}>
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">Juz Index</h1>
-            <p className="text-lg text-right text-muted-foreground">پارہ انڈیکس</p>
-          </div>
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/quran')}
+          className="mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-1">Juz Index</h1>
+          <p className="text-lg text-right text-muted-foreground">پارہ انڈیکس</p>
         </div>
 
-        <ScrollArea className="h-[calc(100vh-200px)]">
-          <div className="grid gap-4">
-            {juzData.map((juz) => (
+        {/* Search */}
+        <div className="mb-4 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder="Search Juz by number or name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        <ScrollArea className="h-[calc(100vh-260px)]">
+          <div className="grid gap-3">
+            {filteredJuz.map((juz) => (
               <Card
                 key={juz.number}
                 onClick={() => navigate(`/quran/juz/${juz.number}`)}
-                className="p-6 cursor-pointer hover:shadow-lg transition-all hover:scale-105 border-2 hover:border-primary/50"
+                className="p-4 cursor-pointer hover:shadow-md transition-all hover:border-primary/50 bg-card"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-semibold">Juz {juz.number}</h3>
+                    <h3 className="text-lg font-semibold">Juz {juz.number}</h3>
                     <p className="text-sm text-muted-foreground">
                       Surah {juz.startSurah} - {juz.endSurah}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-arabic">{juz.nameUrdu}</p>
+                    <p className="text-xl font-arabic">{juz.nameUrdu}</p>
                     <p className="text-sm text-muted-foreground">پارہ {juz.number}</p>
                   </div>
                 </div>

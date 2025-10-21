@@ -36,39 +36,43 @@ const Bookmarks = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-8 px-4">
+    <div className="min-h-screen bg-background py-6 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="outline" onClick={() => navigate('/quran')}>
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">Bookmarks</h1>
-            <p className="text-lg text-right text-muted-foreground">بک مارکس</p>
-          </div>
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/quran')}
+          className="mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-1">Bookmarks</h1>
+          <p className="text-lg text-right text-muted-foreground">بک مارکس</p>
         </div>
 
         {bookmarks.length === 0 ? (
-          <Card className="p-12 text-center">
+          <Card className="p-8 text-center bg-card">
             <p className="text-lg text-muted-foreground">No bookmarks saved yet</p>
             <p className="text-sm text-muted-foreground mt-2">
               Start reading and save your favorite verses
             </p>
           </Card>
         ) : (
-          <ScrollArea className="h-[calc(100vh-200px)]">
-            <div className="grid gap-4">
+          <ScrollArea className="h-[calc(100vh-220px)]">
+            <div className="grid gap-3">
               {bookmarks.map((bookmark) => (
                 <Card
                   key={bookmark.timestamp}
-                  className="p-6 hover:shadow-lg transition-all"
+                  className="p-4 hover:shadow-md transition-all bg-card"
                 >
                   <div className="flex items-center justify-between">
                     <div
                       onClick={() => navigate(`/quran/surah/${bookmark.surahNumber}`)}
                       className="cursor-pointer flex-1"
                     >
-                      <h3 className="text-xl font-semibold">{bookmark.surahName}</h3>
+                      <h3 className="text-lg font-semibold">{bookmark.surahName}</h3>
                       <p className="text-sm text-muted-foreground">
                         Ayah {bookmark.ayahNumber}
                       </p>

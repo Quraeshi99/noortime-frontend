@@ -25,20 +25,24 @@ const GoToSurah = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-8 px-4">
+    <div className="min-h-screen bg-background py-6 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="outline" onClick={() => navigate('/quran')}>
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">Go to Surah</h1>
-            <p className="text-lg text-right text-muted-foreground">سورہ پر جائیں</p>
-          </div>
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/quran')}
+          className="mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-1">Go to Surah</h1>
+          <p className="text-lg text-right text-muted-foreground">سورہ پر جائیں</p>
         </div>
 
-        <Card className="p-8">
-          <div className="space-y-6">
+        <Card className="p-6 bg-card">
+          <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-2 block">
                 Enter Surah Number (1-114)
@@ -58,7 +62,7 @@ const GoToSurah = () => {
                 }}
               />
             </div>
-            <Button onClick={handleGoToSurah} className="w-full" size="lg">
+            <Button onClick={handleGoToSurah} className="w-full">
               Go to Surah
             </Button>
           </div>
