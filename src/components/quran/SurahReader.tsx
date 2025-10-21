@@ -3,19 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchSurahWithTranslations, SurahWithTranslation } from '@/services/quranApi';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import {
   ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
   BookmarkPlus,
   Volume2,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const AYAHS_PER_PAGE = 5;
+const LINES_PER_PAGE = 16;
 
 export const SurahReader = () => {
   const { surahNumber } = useParams<{ surahNumber: string }>();
@@ -58,13 +55,53 @@ export const SurahReader = () => {
 
   if (!surahData) return null;
 
-  const totalAyahs = surahData.arabic.ayahs?.length || 0;
-  const totalPages = Math.ceil(totalAyahs / AYAHS_PER_PAGE);
+  const ayahs = surahData.arabic.ayahs || [];
+  
+  // Split ayahs into pages based on line count
+  const createPages = () => {
+    const pages: Array<Array<typeof ayahs[0]>> = [];
+    let currentPageAyahs: Array<typeof ayahs[0]> = [];
+    let currentLineCount = 0;
+    
+    ayahs.forEach((ayah) => {
+      // Estimate lines needed for this ayah (rough calculation)
+      const textLength = ayah.text.length;
+      const estimatedLines = Math.ceil(textLength / 35); // ~35 chars per line
+      
+      if (currentLineCount + estimatedLines <= LINES_PER_PAGE) {
+        currentPageAyahs.push(ayah);
+        currentLineCount += estimatedLines;
+      } else {
+        if (currentPageAyahs.length > 0) {
+          pages.push([...currentPageAyahs]);
+        }
+        currentPageAyahs = [ayah];
+        currentLineCount = estimatedLines;
+      }
+    });
+    
+    if (currentPageAyahs.length > 0) {
+      pages.push([...currentPageAyahs]);
+    }
+    
+    return pages;
+  };
 
-  const getCurrentPageAyahs = () => {
-    const startIdx = currentPage * AYAHS_PER_PAGE;
-    const endIdx = Math.min(startIdx + AYAHS_PER_PAGE, totalAyahs);
-    return surahData.arabic.ayahs?.slice(startIdx, endIdx) || [];
+  const pages = createPages();
+  const totalPages = pages.length;
+  const currentPageAyahs = pages[currentPage] || [];
+
+  const handlePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const pageWidth = rect.width;
+    
+    // Click on left half = previous page, right half = next page
+    if (clickX < pageWidth / 2) {
+      handlePrevPage();
+    } else {
+      handleNextPage();
+    }
   };
 
   const handleNextPage = () => {
@@ -74,7 +111,7 @@ export const SurahReader = () => {
       setTimeout(() => {
         setCurrentPage(currentPage + 1);
         setIsFlipping(false);
-      }, 300);
+      }, 600);
     }
   };
 
@@ -85,7 +122,7 @@ export const SurahReader = () => {
       setTimeout(() => {
         setCurrentPage(currentPage - 1);
         setIsFlipping(false);
-      }, 300);
+      }, 600);
     }
   };
 
@@ -139,11 +176,15 @@ export const SurahReader = () => {
           </div>
         </Card>
 
-        {/* Book Page Container */}
-        <div className="relative perspective-[2000px]">
+
+        {/* Book Page Container - Click to flip */}
+        <div 
+          className="relative perspective-[2000px] cursor-pointer"
+          onClick={handlePageClick}
+        >
           <div 
             className={`
-              transition-all duration-500 ease-in-out transform-style-3d
+              transition-all duration-600 ease-in-out transform-style-3d
               ${isFlipping && flipDirection === 'next' ? 'animate-page-flip-next' : ''}
               ${isFlipping && flipDirection === 'prev' ? 'animate-page-flip-prev' : ''}
             `}
@@ -184,17 +225,17 @@ export const SurahReader = () => {
                   </div>
                 )}
 
-                {/* Ayahs Content */}
-                <ScrollArea className="h-[480px] px-2">
-                  <div className="space-y-6">
-                    {getCurrentPageAyahs().map((ayah, index) => (
+                {/* Ayahs Content - No Scroll, Fixed 16 Lines */}
+                <div className="h-[450px] overflow-hidden px-2">
+                  <div className="space-y-5">
+                    {currentPageAyahs.map((ayah, index) => (
                       <div key={ayah.number} className="relative">
                         {/* Arabic Text with Ayah Number */}
-                        <div className="text-right mb-4">
-                          <p className="text-3xl font-arabic leading-[3.5rem] text-islamic-crescent inline">
+                        <div className="text-right mb-3">
+                          <p className="text-2xl font-arabic leading-[2.8rem] text-islamic-crescent inline">
                             {ayah.text}
                             {/* Ayah Number in Traditional Circle */}
-                            <span className="inline-flex items-center justify-center w-8 h-8 mx-2 rounded-full bg-gradient-to-br from-islamic-gold/30 to-islamic-crescent/30 border-2 border-islamic-gold/50 text-sm font-bold text-islamic-crescent align-middle">
+                            <span className="inline-flex items-center justify-center w-7 h-7 mx-2 rounded-full bg-gradient-to-br from-islamic-gold/30 to-islamic-crescent/30 border-2 border-islamic-gold/50 text-xs font-bold text-islamic-crescent align-middle">
                               {ayah.numberInSurah}
                             </span>
                           </p>
@@ -202,17 +243,17 @@ export const SurahReader = () => {
 
                         {/* Translations */}
                         {(showUrdu || showEnglish) && (
-                          <div className="bg-background/40 rounded-lg p-4 border border-islamic-gold/20 space-y-3">
+                          <div className="bg-background/40 rounded-lg p-3 border border-islamic-gold/20 space-y-2">
                             {/* Urdu Translation */}
                             {showUrdu && surahData.urduTranslation && (
-                              <p className="text-lg text-right text-muted-foreground leading-relaxed font-urdu">
+                              <p className="text-sm text-right text-muted-foreground leading-relaxed font-urdu">
                                 {surahData.urduTranslation.ayahs[ayah.numberInSurah - 1]?.text}
                               </p>
                             )}
 
                             {/* English Translation */}
                             {showEnglish && surahData.englishTranslation && (
-                              <p className="text-base text-left text-muted-foreground leading-relaxed border-t border-islamic-gold/10 pt-3">
+                              <p className="text-xs text-left text-muted-foreground leading-relaxed border-t border-islamic-gold/10 pt-2">
                                 {surahData.englishTranslation.ayahs[ayah.numberInSurah - 1]?.text}
                               </p>
                             )}
@@ -220,13 +261,13 @@ export const SurahReader = () => {
                         )}
 
                         {/* Divider between ayahs */}
-                        {index < getCurrentPageAyahs().length - 1 && (
-                          <div className="mt-6 border-b border-islamic-gold/20"></div>
+                        {index < currentPageAyahs.length - 1 && (
+                          <div className="mt-4 border-b border-islamic-gold/20"></div>
                         )}
                       </div>
                     ))}
                   </div>
-                </ScrollArea>
+                </div>
 
                 {/* Page Number - Traditional Style */}
                 <div className="text-center mt-6 pt-4 border-t border-islamic-gold/30">
@@ -236,33 +277,15 @@ export const SurahReader = () => {
                     </span>
                   </div>
                 </div>
+
+                {/* Hint Text */}
+                <div className="text-center mt-2">
+                  <p className="text-xs text-muted-foreground opacity-60">
+                    Click left to go back • Click right to go forward
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Navigation Buttons - Book Style */}
-          <div className="flex items-center justify-between mt-6">
-            <Button
-              onClick={handlePrevPage}
-              disabled={currentPage === 0}
-              variant="outline"
-              size="lg"
-              className="gap-2 border-2 border-islamic-gold/40 hover:border-islamic-gold hover:bg-islamic-gold/10 disabled:opacity-30"
-            >
-              <ChevronLeft className="h-5 w-5" />
-              پچھلا
-            </Button>
-            
-            <Button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages - 1}
-              variant="outline"
-              size="lg"
-              className="gap-2 border-2 border-islamic-gold/40 hover:border-islamic-gold hover:bg-islamic-gold/10 disabled:opacity-30"
-            >
-              اگلا
-              <ChevronRight className="h-5 w-5" />
-            </Button>
           </div>
         </div>
       </div>
