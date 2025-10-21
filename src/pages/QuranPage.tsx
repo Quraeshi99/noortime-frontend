@@ -1,7 +1,7 @@
-import { SurahsList } from '@/components/quran/SurahsList';
+import QuranNavigation from '@/components/quran/QuranNavigation';
 
 const QuranPage = () => {
-  return <SurahsList />;
+  return <QuranNavigation />;
 };
 
 export default QuranPage;
