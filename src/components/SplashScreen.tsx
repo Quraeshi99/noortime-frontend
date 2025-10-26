@@ -36,7 +36,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         {/* Logo Image - Full Size */}
         <div className="flex justify-center">
           <img 
-            src="/lovable-uploads/ae0e0c9a-71d5-4a74-9acd-2476254d6481.png" 
+            src="/images/ae0e0c9a-71d5-4a74-9acd-2476254d6481.png" 
             alt="Noor Time - Prayer Time & Islamic Calendar" 
             className="w-80 h-auto md:w-96 max-w-full object-contain animate-fade-in"
           />

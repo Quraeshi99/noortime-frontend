@@ -27,7 +27,7 @@ export const PrayerHeader = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <img 
-            src="/lovable-uploads/39329f85-045b-48c6-88b3-a2d925d41463.png" 
+            src="/images/39329f85-045b-48c6-88b3-a2d925d41463.png" 
             alt="Noor Time Logo" 
             className="w-12 h-12 rounded-lg shadow-lg"
           />
