@@ -40,11 +40,11 @@ const Index = () => {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 bg-gradient-to-br relative ${
+    <div className={`h-screen overflow-hidden transition-colors duration-300 bg-gradient-to-br relative ${
       isDarkMode ? 'from-gray-900 via-gray-800 to-gray-900' : 'from-gray-50 via-white to-gray-100'
     }`}>
-      {/* Main Content Container - allow scrolling with min-h-screen instead of fixed h-screen */}
-      <div className="min-h-screen flex flex-col p-3 pb-28 space-y-3 relative max-w-md mx-auto">
+      {/* Main Content Container - strict fixed height */}
+      <div className="h-screen flex flex-col p-3 pb-20 space-y-3 relative max-w-md mx-auto">
         {/* Header Section */}
         <div className="flex-shrink-0">
         <TopHeader
@@ -57,8 +57,8 @@ const Index = () => {
         />
         </div>
         
-        {/* Main Prayer Section - Takes available space but can expand */}
-        <div className="flex-1 flex flex-col">
+        {/* Main Prayer Section - takes exact remaining space */}
+        <div className="flex-1 min-h-0">
           <MainPrayerTable
             prayerTimes={prayerTimes}
             jumahTime={jumahTime}
@@ -67,7 +67,7 @@ const Index = () => {
         </div>
         
         {/* Bottom Section - Additional Times */}
-        <div className="flex-shrink-0 mt-auto">
+        <div className="flex-shrink-0">
           <BottomSection
             englishDate={englishDate}
             islamicDate={islamicDate}

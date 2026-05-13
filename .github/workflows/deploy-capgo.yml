@@ -31,4 +31,4 @@ jobs:
 
       - name: Deploy to Capgo
         run: |
-          npx @capgo/cli upload -a ${{ secrets.CAPGO_TOKEN }}
+          npx @capgo/cli bundle upload -a ${{ secrets.CAPGO_TOKEN }}
