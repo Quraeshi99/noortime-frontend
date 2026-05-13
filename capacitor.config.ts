@@ -35,6 +35,9 @@ const config: CapacitorConfig = {
       style: 'dark',
       resizeOnFullScreen: true,
     },
+    CapacitorUpdater: {
+      autoUpdate: true,
+    },
   },
 };
 
