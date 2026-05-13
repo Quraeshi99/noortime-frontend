@@ -29,12 +29,12 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # Step 3: Java setup (Android build ke liye)
-      - name: ☕ Setup Java 17
+      # Step 3: Java setup (Android build ke liye — Capacitor needs Java 21)
+      - name: ☕ Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       # Step 4: Android SDK setup
       - name: 🤖 Setup Android SDK
