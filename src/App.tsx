@@ -14,6 +14,7 @@ import PageReader from "./components/quran/PageReader";
 import GoToPage from "./components/quran/GoToPage";
 import GoToSurah from "./components/quran/GoToSurah";
 import Bookmarks from "./components/quran/Bookmarks";
+import { BackButtonHandler } from "./components/BackButtonHandler";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <BackButtonHandler />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/quran" element={<QuranPage />} />

@@ -10,16 +10,16 @@ import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 
 const Index = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
+  // Only show splash screen if it hasn't been shown in this session
+  const [showSplash, setShowSplash] = useState(() => {
+    return !sessionStorage.getItem('splashShown');
+  });
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   
-  // Stable callback to prevent infinite re-renders
   const handleSplashComplete = useCallback(() => {
-    console.log('Splash onComplete called');
+    sessionStorage.setItem('splashShown', 'true');
     setShowSplash(false);
   }, []);
-  
-  console.log('Index component - showSplash:', showSplash);
   
   const {
     currentTime,
@@ -36,17 +36,15 @@ const Index = () => {
   } = usePrayerTimes();
 
   if (showSplash) {
-    console.log('Showing splash screen');
     return <SplashScreen onComplete={handleSplashComplete} />;
   }
 
-  console.log('Showing main app');
   return (
-    <div className={`min-h-screen overflow-hidden transition-colors duration-300 bg-gradient-to-br relative ${
+    <div className={`min-h-screen transition-colors duration-300 bg-gradient-to-br relative ${
       isDarkMode ? 'from-gray-900 via-gray-800 to-gray-900' : 'from-gray-50 via-white to-gray-100'
     }`}>
-      {/* Main Content Container */}
-      <div className="h-screen flex flex-col p-3 pb-20 space-y-3 relative max-w-md mx-auto">
+      {/* Main Content Container - allow scrolling with min-h-screen instead of fixed h-screen */}
+      <div className="min-h-screen flex flex-col p-3 pb-28 space-y-3 relative max-w-md mx-auto">
         {/* Header Section */}
         <div className="flex-shrink-0">
         <TopHeader
@@ -59,8 +57,8 @@ const Index = () => {
         />
         </div>
         
-        {/* Main Prayer Section - Takes most space */}
-        <div className="flex-1 min-h-0">
+        {/* Main Prayer Section - Takes available space but can expand */}
+        <div className="flex-1 flex flex-col">
           <MainPrayerTable
             prayerTimes={prayerTimes}
             jumahTime={jumahTime}
@@ -69,7 +67,7 @@ const Index = () => {
         </div>
         
         {/* Bottom Section - Additional Times */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 mt-auto">
           <BottomSection
             englishDate={englishDate}
             islamicDate={islamicDate}
