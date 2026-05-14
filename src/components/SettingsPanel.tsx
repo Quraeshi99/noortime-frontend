@@ -9,7 +9,8 @@ import {
   X,
   Edit3,
   Shield,
-  ArrowLeft
+  ArrowLeft,
+  Building2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -20,6 +21,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { ProfileModal } from "@/components/profile/ProfileModal";
+import { MasjidAdminPanel } from "@/components/MasjidAdminPanel";
+import { MasjidRegisterModal } from "@/components/MasjidRegisterModal";
 import { useToast } from "@/hooks/use-toast";
 
 interface SettingsPanelProps {
@@ -42,6 +45,8 @@ export const SettingsPanel = ({
   const [currentView, setCurrentView] = useState<ViewType>('main');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isMasjidPanelOpen, setIsMasjidPanelOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [authModalView, setAuthModalView] = useState<'login' | 'signup'>('login');
   
   const { user, signOut, loading } = useAuth();
@@ -104,12 +109,12 @@ export const SettingsPanel = ({
                     <Avatar className="h-7 w-7 sm:h-10 sm:w-10 ring-2 ring-primary/20 flex-shrink-0">
                       <AvatarImage src="/placeholder-avatar.jpg" />
                       <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-xs">
-                        {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                        {(user.full_name || (user as any).name || user.email || 'U').charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-semibold text-foreground text-xs truncate">
-                        {user.user_metadata?.full_name || 'User'}
+                        {user.full_name || (user as any).name || 'User'}
                       </h3>
                       <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
@@ -144,15 +149,27 @@ export const SettingsPanel = ({
                       <h3 className="font-semibold text-xs">Welcome!</h3>
                       <p className="text-[10px] sm:text-xs text-muted-foreground">Sign in to your account</p>
                     </div>
-                    <Button 
-                      className="w-full h-7 sm:h-9 text-xs"
-                      onClick={() => {
-                        setAuthModalView('login');
-                        setIsAuthModalOpen(true);
-                      }}
-                    >
-                      Sign In
-                    </Button>
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <Button 
+                        variant="outline"
+                        className="h-7 sm:h-9 text-xs"
+                        onClick={() => {
+                          setAuthModalView('signup');
+                          setIsAuthModalOpen(true);
+                        }}
+                      >
+                        Sign Up
+                      </Button>
+                      <Button 
+                        className="h-7 sm:h-9 text-xs"
+                        onClick={() => {
+                          setAuthModalView('login');
+                          setIsAuthModalOpen(true);
+                        }}
+                      >
+                        Sign In
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -190,6 +207,30 @@ export const SettingsPanel = ({
                           id="sound"
                           checked={sound}
                           onCheckedChange={setSound}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <Label htmlFor="autosilent" className="font-medium text-[10px] sm:text-sm text-islamic-gold">Smart Auto-Silent</Label>
+                          <p className="text-[9px] sm:text-xs text-muted-foreground">GPS + BT Mesh during Jamaat</p>
+                        </div>
+                        <Switch
+                          id="autosilent"
+                          defaultChecked={true}
+                          onCheckedChange={(val) => console.log('Auto-silent set:', val)}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <Label htmlFor="devicealarm" className="font-medium text-[10px] sm:text-sm text-islamic-crescent">Native Alarms</Label>
+                          <p className="text-[9px] sm:text-xs text-muted-foreground">Capacitor Background Iqamah</p>
+                        </div>
+                        <Switch
+                          id="devicealarm"
+                          defaultChecked={true}
+                          onCheckedChange={(val) => console.log('Native Alarms set:', val)}
                         />
                       </div>
 
@@ -235,11 +276,32 @@ export const SettingsPanel = ({
                         <Volume2 className="h-3 w-3 mr-1 sm:mr-2" />
                         Sounds
                       </Button>
+
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setIsMasjidPanelOpen(true)}
+                        className="w-full justify-start h-7 sm:h-10 text-[10px] sm:text-sm border-islamic-gold/30 hover:border-islamic-gold hover:bg-islamic-gold/5 text-islamic-gold"
+                      >
+                        <Building2 className="h-3 w-3 mr-1 sm:mr-2" />
+                        Masjid Profile & Admin
+                      </Button>
                     </div>
                   </div>
 
                 </>
               )}
+
+              {/* Universal Links */}
+              <div className="pt-2 border-t">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setIsRegisterModalOpen(true)}
+                  className="w-full justify-start h-7 sm:h-10 text-[10px] sm:text-sm text-islamic-crescent hover:bg-islamic-crescent/5"
+                >
+                  <Building2 className="h-3 w-3 mr-1 sm:mr-2" />
+                  Register / Onboard Your Masjid
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -257,6 +319,18 @@ export const SettingsPanel = ({
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
         initialView="profile"
+      />
+
+      {/* Masjid Admin Panel */}
+      <MasjidAdminPanel
+        isOpen={isMasjidPanelOpen}
+        onClose={() => setIsMasjidPanelOpen(false)}
+      />
+
+      {/* Masjid Register / Onboarding Modal */}
+      <MasjidRegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
       />
     </>
   );

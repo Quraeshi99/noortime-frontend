@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { fetchPrayerTimes, PrayerTime as ApiPrayerTime } from '@/services/prayerTimesApi';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '@/lib/db';
+import { useSync } from './useSync';
 
 interface PrayerTime {
   name: string;
@@ -27,7 +29,6 @@ interface UsePrayerTimesReturn {
   loading: boolean;
 }
 
-// Arabic names mapping
 const arabicNames: Record<string, string> = {
   'Fajr': 'الفجر',
   'Sunrise': 'الشروق',
@@ -39,102 +40,32 @@ const arabicNames: Record<string, string> = {
   'Isha': 'العشاء',
 };
 
+// Default fallback data if DB is empty
+const DEFAULT_PRAYERS: PrayerTime[] = [
+  { name: 'Fajr', arabicName: 'الفجر', azanTime: '05:30', jamaatTime: '05:45' },
+  { name: 'Zohar', arabicName: 'الظهر', azanTime: '12:15', jamaatTime: '12:30' },
+  { name: 'Asar', arabicName: 'العصر', azanTime: '15:45', jamaatTime: '16:00' },
+  { name: 'Maghrib', arabicName: 'المغرب', azanTime: '18:30', jamaatTime: '18:35' },
+  { name: 'Isha', arabicName: 'العشاء', azanTime: '20:15', jamaatTime: '20:30' },
+];
+
 export const usePrayerTimes = (): UsePrayerTimesReturn => {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
-  const [loading, setLoading] = useState(true);
   
-  // Data from API
-  const [islamicDate, setIslamicDate] = useState('15 Rajab 1446');
-  const [englishDate, setEnglishDate] = useState('');
-  const [prayerTimes, setPrayerTimes] = useState<PrayerTime[]>([
-    {
-      name: 'Fajr',
-      arabicName: 'الفجر',
-      azanTime: '05:30',
-      jamaatTime: '05:45',
-      isCompleted: true,
-    },
-    {
-      name: 'Zohar',
-      arabicName: 'الظهر',
-      azanTime: '12:15',
-      jamaatTime: '12:30',
-      isActive: true,
-    },
-    {
-      name: 'Asar',
-      arabicName: 'العصر',
-      azanTime: '15:45',
-      jamaatTime: '16:00',
-      isNext: true,
-    },
-    {
-      name: 'Maghrib',
-      arabicName: 'المغرب',
-      azanTime: '18:30',
-      jamaatTime: '18:35',
-    },
-    {
-      name: 'Isha',
-      arabicName: 'العشاء',
-      azanTime: '20:15',
-      jamaatTime: '20:30',
-    },
-  ]);
-  const [jumahTime, setJumahTime] = useState({ azanTime: '12:30', jamaatTime: '13:00' });
-  const [khutbahTime, setKhutbahTime] = useState('12:45');
-  const [otherTimes, setOtherTimes] = useState([
-    { name: 'Sahar End', time: '05:15' },
-    { name: 'Chasht', time: '09:30' },
-    { name: 'Zawal Start', time: '12:00' },
-    { name: 'Zawal End', time: '12:15' },
-    { name: 'Tulu', time: '06:45' },
-    { name: 'Gurub', time: '18:30' },
-    { name: 'Iftar', time: '18:30' },
-  ]);
+  const { syncDelta } = useSync();
 
-  // Fetch prayer times from API on mount
+  // Trigger background delta sync on mount
   useEffect(() => {
-    const loadPrayerTimes = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchPrayerTimes();
-        
-        // Transform API data to match component structure
-        const transformedPrayerTimes: PrayerTime[] = data.prayerTimes
-          .filter(pt => pt.name !== 'Sunrise') // Filter out Sunrise from main table
-          .map(pt => ({
-            name: pt.name,
-            arabicName: arabicNames[pt.name] || pt.name,
-            azanTime: pt.time,
-            jamaatTime: pt.jamaat,
-          }));
-        
-        setPrayerTimes(transformedPrayerTimes);
-        
-        // Parse Jumah times
-        const [jumahAzan, jumahJamaat] = data.jumahTime.split('/').map(t => t.trim());
-        setJumahTime({
-          azanTime: jumahAzan || data.jumahTime,
-          jamaatTime: jumahJamaat || data.jumahTime,
-        });
-        
-        setKhutbahTime(data.khutbahTime);
-        setOtherTimes(data.otherTimes);
-        setIslamicDate(data.islamicDate);
-        setEnglishDate(data.englishDate);
-      } catch (error) {
-        console.error('Failed to load prayer times:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    syncDelta();
+  }, [syncDelta]);
 
-    loadPrayerTimes();
-  }, []);
+  // Query default masjid from Dexie
+  const defaultMasjid = useLiveQuery(
+    () => db.masjids.where('is_default').equals(1).first() ?? db.masjids.orderBy('id').first()
+  );
 
-  // Update current time every second
+  // Update current clock
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -144,22 +75,115 @@ export const usePrayerTimes = (): UsePrayerTimesReturn => {
 
     updateTime();
     const interval = setInterval(updateTime, 1000);
-
     return () => clearInterval(interval);
   }, []);
+
+  // Compute live timings based on local DB schedule or fallbacks
+  let prayerTimes: PrayerTime[] = [...DEFAULT_PRAYERS];
+  let jumahTime = { azanTime: '12:30', jamaatTime: '13:00' };
+  let khutbahTime = '12:45';
+  let islamicDate = '15 Rajab 1446';
+  let otherTimes = [
+    { name: 'Sahar End', time: '05:15' },
+    { name: 'Sunrise', time: '06:45' },
+    { name: 'Zawal Start', time: '12:00' },
+    { name: 'Sunset', time: '18:30' },
+  ];
+
+  if (defaultMasjid?.monthly_schedule) {
+    const sched = defaultMasjid.monthly_schedule;
+    const todayStr = format(new Date(), 'yyyy-MM-dd');
+    
+    // Find today's schedule from object or array mapping
+    let todayData: any = null;
+    if (Array.isArray(sched)) {
+      todayData = sched.find(d => d.date === todayStr) || sched[0];
+    } else if (typeof sched === 'object') {
+      todayData = sched[todayStr] || Object.values(sched)[0];
+    }
+
+    if (todayData) {
+      if (todayData.islamic_date) islamicDate = todayData.islamic_date;
+      
+      // Map main prayers
+      const mapped: PrayerTime[] = [];
+      const keys = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+      for (const k of keys) {
+        const pt = todayData.prayers?.[k] || todayData[k.toLowerCase()];
+        const displayKey = k === 'Dhuhr' ? 'Zohar' : k === 'Asr' ? 'Asar' : k;
+        if (pt) {
+          mapped.push({
+            name: displayKey,
+            arabicName: arabicNames[displayKey] || displayKey,
+            azanTime: pt.azan || pt.time || '—',
+            jamaatTime: pt.jamaat || '—'
+          });
+        }
+      }
+      if (mapped.length > 0) prayerTimes = mapped;
+
+      // Map Friday specifics if available
+      if (todayData.jumah || todayData.prayers?.Jumah) {
+        const j = todayData.jumah || todayData.prayers?.Jumah;
+        jumahTime = {
+          azanTime: j.azan || j.time || '12:30',
+          jamaatTime: j.jamaat || '13:00'
+        };
+        if (j.khutbah) khutbahTime = j.khutbah;
+      }
+    }
+  }
+
+  // Calculate Active, Next, Completed statuses
+  const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+  let nextPrayerName = 'Fajr';
+  let minDiff = Infinity;
+
+  prayerTimes = prayerTimes.map((pt) => {
+    const [h, m] = pt.azanTime.split(':').map(Number);
+    const azanMins = (h || 0) * 60 + (m || 0);
+    
+    const [jh, jm] = pt.jamaatTime.split(':').map(Number);
+    const jamaatMins = (jh || 0) * 60 + (jm || 0);
+
+    const isCompleted = nowMinutes >= jamaatMins;
+    const isActive = nowMinutes >= azanMins && nowMinutes < jamaatMins;
+    
+    if (!isCompleted && azanMins - nowMinutes < minDiff && azanMins > nowMinutes) {
+      minDiff = azanMins - nowMinutes;
+      nextPrayerName = pt.name;
+    }
+
+    return {
+      ...pt,
+      isCompleted,
+      isActive,
+      isNext: false
+    };
+  });
+
+  // Mark the next prayer
+  prayerTimes = prayerTimes.map(pt => ({
+    ...pt,
+    isNext: pt.name === nextPrayerName && !pt.isActive && !pt.isCompleted
+  }));
+
+  const hoursNext = minDiff !== Infinity ? Math.floor(minDiff / 60) : 0;
+  const minsNext = minDiff !== Infinity ? minDiff % 60 : 0;
+  const timeToNextStr = minDiff !== Infinity ? `${hoursNext}h ${minsNext}m` : '—';
 
   return {
     currentTime,
     currentDate,
     islamicDate,
-    nextPrayer: 'Asar',
-    timeToNext: '2h 30m',
-    jamaatCountdown: '25:30',
+    nextPrayer: nextPrayerName,
+    timeToNext: timeToNextStr,
+    jamaatCountdown: '—',
     prayerTimes,
     jumahTime,
     khutbahTime,
     otherTimes,
-    englishDate: englishDate || format(new Date(), 'dd MMMM yyyy'),
-    loading,
+    englishDate: format(new Date(), 'dd MMMM yyyy'),
+    loading: defaultMasjid === undefined,
   };
 };

@@ -36,7 +36,7 @@ export const ModernSignupForm = ({ onSwitchToLogin, onSuccess }: ModernSignupFor
 
     setLoading(true);
 
-    const { error } = await signUp(email, password, fullName);
+    const { error } = await signUp(email, password, fullName, confirmPassword);
     
     if (error) {
       toast({
@@ -47,7 +47,7 @@ export const ModernSignupForm = ({ onSwitchToLogin, onSuccess }: ModernSignupFor
     } else {
       toast({
         title: "Account Created!",
-        description: "Please check your email to verify your account.",
+        description: "Alhamdulillah, you have been registered and authenticated successfully.",
       });
       onSuccess();
     }

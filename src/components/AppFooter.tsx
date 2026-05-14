@@ -2,6 +2,7 @@ import { User, BookOpen, ScanLine, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RawPrayerTimesModal } from "@/components/RawPrayerTimesModal";
 
 interface AppFooterProps {
   isDarkMode: boolean;
@@ -16,6 +17,7 @@ export const AppFooter = ({
 }: AppFooterProps) => {
   const navigate = useNavigate();
   const [comingSoonButton, setComingSoonButton] = useState<string | null>(null);
+  const [isRawTimesOpen, setIsRawTimesOpen] = useState(false);
 
   const handleComingSoon = (buttonName: string) => {
     setComingSoonButton(buttonName);
@@ -116,11 +118,11 @@ export const AppFooter = ({
               )}
             </Button>
 
-            {/* Prayer Times Button - Coming Soon */}
+            {/* Prayer Times Button - Direct connect to raw master timing engine */}
             <Button
               variant="ghost"
               size="lg"
-              onClick={() => handleComingSoon('times')}
+              onClick={() => setIsRawTimesOpen(true)}
               className={`relative flex flex-col items-center gap-1.5 min-w-[65px] rounded-2xl transition-all duration-300 ${
                 isDarkMode 
                   ? 'hover:bg-emerald-500/10 active:bg-emerald-500/20' 
@@ -139,19 +141,16 @@ export const AppFooter = ({
               }`}>
                 Times
               </span>
-              {comingSoonButton === 'times' && (
-                <div className={`absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 ${
-                  isDarkMode 
-                    ? 'bg-gray-800 text-gray-200 border border-gray-700' 
-                    : 'bg-white text-gray-700 border border-gray-200 shadow-md'
-                }`}>
-                  Coming Soon
-                </div>
-              )}
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Raw Explorer Dialog */}
+      <RawPrayerTimesModal
+        isOpen={isRawTimesOpen}
+        onClose={() => setIsRawTimesOpen(false)}
+      />
     </div>
   );
 };

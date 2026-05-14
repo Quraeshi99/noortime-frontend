@@ -1,11 +1,15 @@
-import { useState } from "react";
-import { Search, MapPin, Building2, X, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, MapPin, Building2, X, Check, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { db } from "@/lib/db";
+import { useToast } from "@/components/ui/use-toast";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 interface LocationEditModalProps {
   isOpen: boolean;
@@ -16,97 +20,128 @@ interface LocationEditModalProps {
 export const LocationEditModal = ({ isOpen, onClose, onSave }: LocationEditModalProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
-  
-  // Mock data - ye backend API se ayega
-  const mockMosques = [
-    {
-      id: 1,
-      name: "Masjid Al-Noor",
-      address: "Sector 15, Karachi, Pakistan",
-      code: "MAN001",
-      city: "Karachi",
-      type: "mosque"
-    },
-    {
-      id: 2,
-      name: "Masjid Al-Haram",
-      address: "DHA Phase 2, Karachi, Pakistan", 
-      code: "MAH002",
-      city: "Karachi",
-      type: "mosque"
-    }
-  ];
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const mockCities = [
-    {
-      id: 1,
-      name: "Karachi",
-      address: "Sindh, Pakistan",
-      type: "city"
-    },
-    {
-      id: 2,
-      name: "Lahore", 
-      address: "Punjab, Pakistan",
-      type: "city"
-    }
-  ];
+  // Search API call with debounce
+  useEffect(() => {
+    const fetchResults = async () => {
+      setLoading(true);
+      try {
+        // Replace with your actual search endpoint, e.g. /masjids/?search=query
+        const res = await fetch(`${API_BASE_URL}/masjids/?search=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          // Adjust based on paginated response or raw array
+          setResults(Array.isArray(data) ? data : data.items || data.data || []);
+        } else {
+          // Offline fallback sample list
+          setResults([
+            { id: 101, name: "Masjid Al-Noor (Demo)", city: "Karachi", address_line_1: "Sector 15", masjid_code: "DEMO1" },
+            { id: 102, name: "Grand Mosque (Demo)", city: "Lahore", address_line_1: "Gulberg", masjid_code: "DEMO2" }
+          ]);
+        }
+      } catch (e) {
+        // Fallback demo data if backend unreachable during offline usage
+        setResults([
+          { id: 101, name: "Masjid Al-Noor (Demo)", city: "Karachi", address_line_1: "Sector 15", masjid_code: "DEMO1" },
+          { id: 102, name: "Grand Mosque (Demo)", city: "Lahore", address_line_1: "Gulberg", masjid_code: "DEMO2" }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const filteredMosques = mockMosques.filter(mosque => 
-    mosque.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    mosque.code.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    const timer = setTimeout(() => {
+      fetchResults();
+    }, 300);
 
-  const filteredCities = mockCities.filter(city =>
-    city.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedLocation) {
-      onSave(selectedLocation);
-      onClose();
+      try {
+        // Reset all defaults first
+        await db.transaction('rw', db.masjids, async () => {
+          await db.masjids.where('is_default').equals(1).modify({ is_default: false });
+          
+          // Insert or update chosen masjid
+          await db.masjids.put({
+            id: selectedLocation.id,
+            name: selectedLocation.name,
+            version: selectedLocation.version || 1,
+            profile_picture_url: selectedLocation.profile_picture_url,
+            address: selectedLocation.address_line_1 || selectedLocation.address,
+            city: selectedLocation.city,
+            latitude: selectedLocation.latitude,
+            longitude: selectedLocation.longitude,
+            monthly_schedule: selectedLocation.settings?.prayer_times_script || selectedLocation.schedule,
+            is_default: true
+          });
+        });
+
+        toast({
+          title: "Location Updated",
+          description: `Successfully switched to ${selectedLocation.name}`,
+        });
+
+        onSave(selectedLocation);
+        onClose();
+      } catch (err: any) {
+        toast({
+          title: "Save Failed",
+          description: err.message || "Failed to update offline database",
+          variant: "destructive"
+        });
+      }
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto max-h-[80vh] overflow-hidden">
+      <DialogContent className="max-w-md mx-auto max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg">
             <MapPin className="h-5 w-5 text-islamic-crescent" />
-            Change Location
+            Change Location / Masjid
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 flex-1 flex flex-col min-h-0">
           {/* Search Input */}
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search mosque by name or code..."
+              placeholder="Search by city or masjid name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
             />
           </div>
 
-          {/* Tabs for Mosque vs Individual */}
-          <Tabs defaultValue="mosque" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+          {/* Tabs */}
+          <Tabs defaultValue="mosque" className="w-full flex-1 flex flex-col min-h-0">
+            <TabsList className="grid w-full grid-cols-2 flex-shrink-0">
               <TabsTrigger value="mosque" className="flex items-center gap-2">
                 <Building2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Mosque</span>
+                <span>Masjids</span>
               </TabsTrigger>
               <TabsTrigger value="individual" className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <span className="hidden sm:inline">Individual</span>
+                <span>Cities</span>
               </TabsTrigger>
             </TabsList>
 
             {/* Mosque Tab */}
-            <TabsContent value="mosque" className="space-y-2 max-h-60 overflow-y-auto">
-              {filteredMosques.length > 0 ? (
-                filteredMosques.map((mosque) => (
+            <TabsContent value="mosque" className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[150px]">
+              {loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-islamic-gold" />
+                </div>
+              ) : results.length > 0 ? (
+                results.map((mosque) => (
                   <Card
                     key={mosque.id}
                     className={`p-3 cursor-pointer transition-all hover:shadow-md ${
@@ -117,62 +152,41 @@ export const LocationEditModal = ({ isOpen, onClose, onSave }: LocationEditModal
                     onClick={() => setSelectedLocation(mosque)}
                   >
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <Building2 className="h-4 w-4 text-islamic-crescent" />
-                          <h4 className="font-medium text-sm">{mosque.name}</h4>
-                          <Badge variant="secondary" className="text-xs">
-                            {mosque.code}
-                          </Badge>
+                          <Building2 className="h-4 w-4 text-islamic-crescent flex-shrink-0" />
+                          <h4 className="font-medium text-sm truncate">{mosque.name}</h4>
+                          {mosque.masjid_code && (
+                            <Badge variant="secondary" className="text-xs flex-shrink-0">
+                              {mosque.masjid_code}
+                            </Badge>
+                          )}
                         </div>
-                        <p className="text-xs text-muted-foreground">{mosque.address}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {mosque.address_line_1 || mosque.address || mosque.city}
+                        </p>
                       </div>
                       {selectedLocation?.id === mosque.id && (
-                        <Check className="h-4 w-4 text-islamic-gold" />
+                        <Check className="h-4 w-4 text-islamic-gold flex-shrink-0 ml-2" />
                       )}
                     </div>
                   </Card>
                 ))
               ) : (
-                <p className="text-center text-muted-foreground py-4">No mosques found</p>
+                <p className="text-center text-muted-foreground py-8 text-sm">No masjids found</p>
               )}
             </TabsContent>
 
             {/* Individual Tab */}
-            <TabsContent value="individual" className="space-y-2 max-h-60 overflow-y-auto">
-              {filteredCities.length > 0 ? (
-                filteredCities.map((city) => (
-                  <Card
-                    key={city.id}
-                    className={`p-3 cursor-pointer transition-all hover:shadow-md ${
-                      selectedLocation?.id === city.id
-                        ? 'border-accent bg-accent/5'
-                        : 'hover:border-accent/50'
-                    }`}
-                    onClick={() => setSelectedLocation(city)}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <MapPin className="h-4 w-4 text-accent" />
-                          <h4 className="font-medium text-sm">{city.name}</h4>
-                        </div>
-                        <p className="text-xs text-muted-foreground">{city.address}</p>
-                      </div>
-                      {selectedLocation?.id === city.id && (
-                        <Check className="h-4 w-4 text-accent" />
-                      )}
-                    </div>
-                  </Card>
-                ))
-              ) : (
-                <p className="text-center text-muted-foreground py-4">No cities found</p>
-              )}
+            <TabsContent value="individual" className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[150px]">
+              <p className="text-center text-muted-foreground py-8 text-sm">
+                Type city name above to search master timing zones.
+              </p>
             </TabsContent>
           </Tabs>
 
           {/* Action Buttons */}
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-2 pt-2 flex-shrink-0 border-t mt-auto">
             <Button variant="outline" onClick={onClose} className="flex-1">
               <X className="h-4 w-4 mr-2" />
               Cancel
@@ -180,10 +194,10 @@ export const LocationEditModal = ({ isOpen, onClose, onSave }: LocationEditModal
             <Button 
               onClick={handleSave} 
               disabled={!selectedLocation}
-              className="flex-1"
+              className="flex-1 bg-gradient-to-r from-islamic-gold to-islamic-crescent text-white"
             >
               <Check className="h-4 w-4 mr-2" />
-              Save
+              Connect
             </Button>
           </div>
         </div>

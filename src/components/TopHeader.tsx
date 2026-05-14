@@ -1,6 +1,7 @@
 import { LocationCard } from "./LocationCard";
 import { LocationEditModal } from "./LocationEditModal";
 import { useState } from "react";
+import { useSync } from "@/hooks/useSync";
 
 interface TopHeaderProps {
   currentTime: string;
@@ -20,14 +21,16 @@ export const TopHeader = ({
   jamaatCountdown,
 }: TopHeaderProps) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const { syncDelta } = useSync();
 
   const handleLocationEdit = () => {
     setIsLocationModalOpen(true);
   };
 
   const handleLocationSave = (location: any) => {
-    // Yahan backend API call hogi
-    console.log('Saving location:', location);
+    console.log('Location saved, syncing updates for:', location.name);
+    // Instant background sync for newly attached masjid script
+    syncDelta();
   };
 
   return (

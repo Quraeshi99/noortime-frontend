@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModernLoginForm } from "./ModernLoginForm";
@@ -15,6 +15,12 @@ type AuthView = 'login' | 'signup' | 'forgot-password';
 
 export const AuthModal = ({ isOpen, onClose, initialView = 'login' }: AuthModalProps) => {
   const [currentView, setCurrentView] = useState<AuthView>(initialView);
+
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentView(initialView);
+    }
+  }, [isOpen, initialView]);
 
   if (!isOpen) return null;
 

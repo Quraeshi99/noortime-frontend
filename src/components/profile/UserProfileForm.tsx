@@ -18,7 +18,7 @@ export const UserProfileForm = ({ onBack, onChangePassword }: UserProfileFormPro
   const { user, updateProfile } = useAuth();
   const { toast } = useToast();
   
-  const [fullName, setFullName] = useState(user?.user_metadata?.full_name || "");
+  const [fullName, setFullName] = useState(user?.full_name || (user as any)?.name || "");
   const [email, setEmail] = useState(user?.email || "");
   const [loading, setLoading] = useState(false);
 

@@ -2,23 +2,19 @@ import { MapPin, Edit3, Building2, Map } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/lib/db";
 
 interface LocationCardProps {
   onEditLocation: () => void;
 }
 
 export const LocationCard = ({ onEditLocation }: LocationCardProps) => {
-  // Mock data - ye backend se ayega
-  const [userLocation] = useState({
-    type: 'mosque', // 'mosque' or 'individual'
-    name: 'Masjid Al-Noor',
-    address: 'Sector 15, Karachi, Pakistan',
-    code: 'MAN001',
-    city: 'Karachi'
-  });
+  const defaultMasjid = useLiveQuery(
+    () => db.masjids.where('is_default').equals(1).first() ?? db.masjids.orderBy('id').first()
+  );
 
-  const isMosqueConnected = userLocation.type === 'mosque';
+  const isMosqueConnected = defaultMasjid !== undefined;
 
   return (
     <Card className="relative overflow-hidden bg-gradient-to-r from-islamic-crescent/5 via-primary/5 to-islamic-gold/5 border border-islamic-gold/20 shadow-sm">
@@ -35,7 +31,7 @@ export const LocationCard = ({ onEditLocation }: LocationCardProps) => {
               
               <div className="flex items-center gap-2 min-w-0">
                 <h3 className="font-medium text-sm text-foreground truncate">
-                  {isMosqueConnected ? userLocation.name : userLocation.city}
+                  {isMosqueConnected ? defaultMasjid.name : "Select City / Mosque"}
                 </h3>
                 
                 {isMosqueConnected && (
@@ -43,7 +39,7 @@ export const LocationCard = ({ onEditLocation }: LocationCardProps) => {
                     variant="secondary" 
                     className="text-xs px-1.5 py-0.5 bg-islamic-gold/10 text-islamic-crescent border-islamic-gold/30"
                   >
-                    {userLocation.code}
+                    M#{defaultMasjid.id}
                   </Badge>
                 )}
               </div>
@@ -51,11 +47,15 @@ export const LocationCard = ({ onEditLocation }: LocationCardProps) => {
             
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <MapPin className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate">{userLocation.address}</span>
+              <span className="truncate">
+                {isMosqueConnected 
+                  ? (defaultMasjid.address || defaultMasjid.city || "Connected to Master Timing") 
+                  : "Tap edit to search location"}
+              </span>
             </div>
             
             {!isMosqueConnected && (
-              <p className="text-xs text-accent mt-1">Individual User</p>
+              <p className="text-xs text-accent mt-1">Guest Mode Fallback</p>
             )}
           </div>
 
@@ -77,7 +77,7 @@ export const LocationCard = ({ onEditLocation }: LocationCardProps) => {
         <div className={`w-2 h-2 rounded-full ${
           isMosqueConnected 
             ? 'bg-islamic-gold shadow-glow' 
-            : 'bg-accent'
+            : 'bg-accent animate-pulse'
         }`} />
       </div>
     </Card>
